@@ -12,7 +12,7 @@
   <nav>
     <ul>
       <HeaderLink href="/books">Books</HeaderLink>
-      <HeaderLink href="/projects">Projects</HeaderLink>
+      <!-- <HeaderLink href="/projects">Projects</HeaderLink> -->
     </ul>
   </nav>
 </header>

@@ -1,14 +1,19 @@
-<div class="hero">
-  <h1>Joe Attardi</h1>
-  <h2>Software Engineer and Author</h2>
-  <img src="/joe.jpg" alt="Joe Attardi">
+<div class="main">
+  <div class="hero">
+    <h1>Joe Attardi</h1>
+    <h2>Software Engineer and Author</h2>
+    <img src="/joe.jpg" alt="Joe Attardi">
+  </div>
 </div>
 
 <style>
-  .hero {
+  .main {
     background: #f0f9ff;
+    height: 100%;
+  }
+
+  .hero {
     padding: 5rem 2rem;
-    border-bottom: 2px solid #e2e8f0;
     display: grid;
     grid-template-areas: 
       "title    photo"
@@ -19,7 +24,8 @@
 
   h1 {
     grid-area: title;
-    font-size: 5rem;
+    /* font-size: 5rem; */
+    font-size: clamp(3rem, 10vw, 5rem);
     font-weight: 900;
     align-self: end;
     margin: 0;
@@ -37,8 +43,23 @@
 
   img {
     grid-area: photo;
-    width: 200px;
+    width: clamp(150px, 30vw, 300px);
     border-radius: 50%;
     border: 3px solid #082f49;
+  }
+
+  @media (max-width: 800px) {
+    .hero {
+      grid-template-areas:
+        "photo"
+        "title"
+        "subtitle";
+
+      justify-items: center;
+    }
+
+    h1 {
+      text-align: center;
+    }
   }
 </style>
