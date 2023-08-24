@@ -1,27 +1,16 @@
 <script>
+  import { clsx } from 'clsx';
   export let href;
 </script>
 
 <li>
-  <a href={href}><div><slot></slot></div></a>
+  <a 
+    href={href}
+    class={clsx(
+      'text-slate-100 hover:bg-slate-600',
+      'py-2 px-4 rounded'
+    )}
+  >
+    <slot></slot>
+  </a>
 </li>
-
-<style>
-  a {
-    color: #f3f4f6;
-    display: block;
-    text-decoration: none;
-    border-radius: 3px;
-    font-weight: normal;
-    padding: 0.5em 0.75em;
-    transform: skewX(-12deg);
-  }
-
-  a div {
-    transform: skew(12deg);
-  }
-
-  a:hover {
-    background: #475569;
-  }
-</style>
