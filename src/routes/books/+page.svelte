@@ -7,14 +7,14 @@
   <title>Books | Joe Attardi</title>
 </svelte:head>
 <main>
-  <PageTitle title="Books" />
+  <PageTitle title="Books by Joe Attardi" />
 
-  <div class="books">
+  <div class="grid grid-cols-1 xl:grid-cols-2 gap-4">
     <BookCard
       href="https://learning.oreilly.com/library/view/web-browser-api/9781098150686/"
-      coverUrl="/books/web-browser-api-cookbook.jpeg"
+      coverUrl="/books/web-browser-cookbook.png"
       title="Web Browser API Cookbook"
-      publisher="O'Reilly"
+      publisher="O'Reilly Media"
       year="2025"
     >
       <p>
@@ -49,18 +49,3 @@
     </BookCard>
   </div>
 </main>
-
-<style>
-  main {
-    padding: 1rem;
-  }
-
-  .books {
-    margin-top: 1rem;
-    /* display: grid; */
-    /* grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); */
-    display: flex;
-    flex-wrap: wrap;
-    /* gap: 1rem; */
-  }
-</style>

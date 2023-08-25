@@ -19,7 +19,7 @@
   </h1>
   <nav class="flex items-center">
     <ul>
-      <HeaderLink href="/books">Writing</HeaderLink>
+      <HeaderLink href="/books">Books</HeaderLink>
       <!-- <HeaderLink href="/projects">Projects</HeaderLink> -->
     </ul>
   </nav>
