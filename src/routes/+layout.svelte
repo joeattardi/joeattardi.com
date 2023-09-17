@@ -7,7 +7,7 @@
   <title>Joe Attardi</title>
 </svelte:head>
 
-<div class="layout">
+<div class="layout bg-slate-200">
   <Header />
   <main class="p-4">
     <slot></slot>
