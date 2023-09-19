@@ -9,7 +9,7 @@
 
 <div class="layout bg-slate-200">
   <Header />
-  <main class="p-4">
+  <main class="p-4 bg-slate-200">
     <slot></slot>
   </main>
 </div>

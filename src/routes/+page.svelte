@@ -20,7 +20,7 @@
   class={clsx(
     'bg-slate-300',
     'mx-auto p-8 max-w-5xl',
-    'rounded-tl-3xl rounded-br-3xl',
+    'rounded-3xl',
     'flex flex-col gap-4 items-center',
     'sm:flex-row sm:items-start',
     'text-center sm:text-left'
