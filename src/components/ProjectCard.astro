@@ -1,0 +1,50 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import type { CollectionEntry } from 'astro:content';
+import Tag from './Tag.astro';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+}
+
+const { project } = Astro.props;
+const { title, summary, tech, repoUrl, demoUrl, image, imageAlt } =
+  project.data;
+const linkClass =
+  'text-primary hover:text-primary-hover inline-flex min-h-11 items-center gap-2 font-medium transition-colors';
+---
+
+<article class="bg-surface border-border flex flex-col overflow-hidden rounded-xl border">
+  {image && (
+    <Image
+      src={image}
+      alt={imageAlt ?? ''}
+      width={800}
+      class="aspect-video w-full object-cover"
+    />
+  )}
+  <div class="flex flex-1 flex-col p-5">
+    <h3 class="text-xl font-semibold tracking-tight">{title}</h3>
+    <p class="text-fg-muted mt-2">{summary}</p>
+    <ul class="mt-4 flex flex-wrap gap-2" aria-label="Technologies">
+      {tech.map((t) => (
+        <Tag>{t}</Tag>
+      ))}
+    </ul>
+    <div class="mt-auto flex flex-wrap gap-x-5 pt-4">
+      {repoUrl && (
+        <a href={repoUrl} class={linkClass}>
+          <Icon name="fa6-brands:github" class="size-5" aria-hidden="true" />
+          Source<span class="sr-only"> for {title}</span>
+        </a>
+      )}
+      {demoUrl && (
+        <a href={demoUrl} class={linkClass}>
+          <Icon name="ph:arrow-square-out" class="size-5" aria-hidden="true" />
+          Live demo<span class="sr-only"> of {title}</span>
+        </a>
+      )}
+    </div>
+  </div>
+</article>

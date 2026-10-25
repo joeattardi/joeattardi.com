@@ -1,0 +1,76 @@
+@import 'tailwindcss';
+@import '@fontsource-variable/inter';
+@import '@fontsource-variable/jetbrains-mono';
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* Light mode defaults */
+  --color-bg: #f7f9fc;
+  --color-surface: #ffffff;
+  --color-surface-raised: #eef2f8;
+  --color-border: #d9e1ee;
+  --color-fg: #0b1220;
+  --color-fg-muted: #4a5a75;
+  --color-primary: #1d4ed8;
+  --color-primary-hover: #1e40af;
+  --color-primary-fg: #ffffff;
+  /* Darkened from the starting palette so it passes 4.5:1 as text on light surfaces */
+  --color-accent: #0369a1;
+
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
+
+  /* Type scale: fluid for large headings */
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: clamp(1.375rem, 1.2rem + 0.8vw, 1.625rem);
+  --text-3xl: clamp(1.625rem, 1.3rem + 1.4vw, 2.125rem);
+  --text-4xl: clamp(2rem, 1.5rem + 2.4vw, 3rem);
+  --text-5xl: clamp(2.5rem, 1.7rem + 3.6vw, 4rem);
+
+  --container-content: 72rem;
+  --container-prose: 44rem;
+}
+
+.dark {
+  --color-bg: #0a1020;
+  --color-surface: #101a30;
+  --color-surface-raised: #16233f;
+  --color-border: #22314f;
+  --color-fg: #e8eef9;
+  --color-fg-muted: #9db0d0;
+  --color-primary: #4f8dfd;
+  --color-primary-hover: #7aa7ff;
+  --color-primary-fg: #0a1020;
+  --color-accent: #38bdf8;
+}
+
+@layer base {
+  html {
+    color-scheme: light;
+    scroll-behavior: smooth;
+  }
+  html.dark {
+    color-scheme: dark;
+  }
+  body {
+    @apply bg-bg font-sans text-fg antialiased;
+  }
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+}

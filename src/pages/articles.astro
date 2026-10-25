@@ -1,0 +1,25 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+
+const articles = (await getCollection('articles')).sort(
+  (a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf(),
+);
+---
+
+<BaseLayout
+  title="Articles"
+  description="Articles by Joe Attardi on frontend development, published in LogRocket, freeCodeCamp, Smashing Magazine and more."
+>
+  <PageHeader
+    title="Articles"
+    intro="Freelance writing on frontend development. Each article links to the original publication."
+  />
+  <div class="mx-auto grid max-w-content gap-6 px-4 pb-16 sm:px-6 md:grid-cols-2 lg:grid-cols-3">
+    {articles.map((article) => (
+      <ArticleCard article={article} />
+    ))}
+  </div>
+</BaseLayout>

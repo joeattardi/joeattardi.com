@@ -1,0 +1,47 @@
+---
+import { Icon } from 'astro-icon/components';
+import type { CollectionEntry } from 'astro:content';
+import Tag from './Tag.astro';
+
+interface Props {
+  article: CollectionEntry<'articles'>;
+}
+
+const { article } = Astro.props;
+const { title, publication, publishedDate, url, summary, tags } = article.data;
+---
+
+<article class="bg-surface border-border rounded-xl border p-5">
+  <p class="text-fg-muted text-sm">
+    {publication} &middot;
+    <time datetime={publishedDate.toISOString()}>
+      {publishedDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+      })}
+    </time>
+  </p>
+  <h3 class="mt-1 text-xl font-semibold tracking-tight">
+    <a
+      href={url}
+      rel="noopener"
+      class="hover:text-primary inline-flex items-start gap-2 transition-colors"
+    >
+      {title}
+      <Icon
+        name="ph:arrow-up-right"
+        class="mt-1 size-5 shrink-0"
+        aria-hidden="true"
+      />
+      <span class="sr-only">(opens original on {publication})</span>
+    </a>
+  </h3>
+  <p class="text-fg-muted mt-2">{summary}</p>
+  {tags.length > 0 && (
+    <ul class="mt-4 flex flex-wrap gap-2" aria-label="Tags">
+      {tags.map((tag) => (
+        <Tag>{tag}</Tag>
+      ))}
+    </ul>
+  )}
+</article>

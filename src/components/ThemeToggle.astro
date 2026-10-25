@@ -1,0 +1,36 @@
+---
+import { Icon } from 'astro-icon/components';
+---
+
+<button
+  type="button"
+  id="theme-toggle"
+  aria-label="Dark mode"
+  aria-pressed="false"
+  class="text-fg hover:bg-surface-raised inline-flex size-11 items-center justify-center rounded-md transition-colors"
+>
+  <Icon name="ph:moon" class="size-6 dark:hidden" aria-hidden="true" />
+  <Icon name="ph:sun" class="hidden size-6 dark:block" aria-hidden="true" />
+</button>
+
+<script>
+  const button = document.getElementById('theme-toggle');
+  const root = document.documentElement;
+
+  const sync = () =>
+    button?.setAttribute(
+      'aria-pressed',
+      String(root.classList.contains('dark')),
+    );
+  sync();
+
+  button?.addEventListener('click', () => {
+    const dark = root.classList.toggle('dark');
+    try {
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    } catch {
+      // Storage unavailable; the choice just won't persist.
+    }
+    sync();
+  });
+</script>

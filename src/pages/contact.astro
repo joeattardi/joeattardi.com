@@ -1,0 +1,26 @@
+---
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import { socials } from '../data/site';
+---
+
+<BaseLayout title="Contact" description="Get in touch with Joe Attardi.">
+  <PageHeader
+    title="Contact"
+    intro="The best way to reach me is by email. I am also on the platforms below."
+  />
+  <ul class="mx-auto grid max-w-content gap-4 px-4 pb-16 sm:grid-cols-2 sm:px-6 lg:grid-cols-4">
+    {socials.map((s) => (
+      <li>
+        <a
+          href={s.href}
+          class="bg-surface border-border hover:border-primary flex min-h-11 items-center gap-3 rounded-xl border p-5 font-medium transition-colors"
+        >
+          <Icon name={s.icon} class="text-primary size-6" aria-hidden="true" />
+          {s.label}
+        </a>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>

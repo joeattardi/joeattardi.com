@@ -1,0 +1,71 @@
+---
+import { getCollection } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Section from '../components/Section.astro';
+import BookCard from '../components/BookCard.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+
+const books = (await getCollection('books', (b) => b.data.featured)).sort(
+  (a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf(),
+);
+const articles = (await getCollection('articles', (a) => a.data.featured))
+  .sort(
+    (a, b) => b.data.publishedDate.valueOf() - a.data.publishedDate.valueOf(),
+  )
+  .slice(0, 3);
+const projects = (await getCollection('projects', (p) => p.data.featured)).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+---
+
+<BaseLayout>
+  <section class="mx-auto max-w-content px-4 pt-14 pb-10 sm:px-6 md:pt-24 md:pb-16">
+    <p class="text-accent font-mono text-sm">
+      Senior frontend engineer &middot; Author
+    </p>
+    <h1 class="mt-3 max-w-3xl text-5xl font-bold tracking-tight text-balance">
+      I build fast, accessible web interfaces and write about how.
+    </h1>
+    <p class="text-fg-muted mt-6 max-w-prose text-lg">
+      Placeholder bio. A couple of sentences about your experience, what you
+      focus on, and the books and articles you have published.
+    </p>
+    <div class="mt-8 flex flex-wrap items-center gap-4">
+      <a
+        href="/projects"
+        class="bg-primary text-primary-fg hover:bg-primary-hover inline-flex min-h-11 items-center gap-2 rounded-md px-5 font-medium transition-colors"
+      >
+        See my work
+        <Icon name="ph:arrow-right" class="size-5" aria-hidden="true" />
+      </a>
+      <SocialLinks />
+    </div>
+  </section>
+
+  <Section title="Books" href="/books">
+    <div class="grid gap-6 lg:grid-cols-2">
+      {books.map((book) => (
+        <BookCard book={book} />
+      ))}
+    </div>
+  </Section>
+
+  <Section title="Articles" href="/articles">
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {articles.map((article) => (
+        <ArticleCard article={article} />
+      ))}
+    </div>
+  </Section>
+
+  <Section title="Projects" href="/projects">
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      {projects.map((project) => (
+        <ProjectCard project={project} />
+      ))}
+    </div>
+  </Section>
+</BaseLayout>

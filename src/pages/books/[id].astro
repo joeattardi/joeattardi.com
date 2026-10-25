@@ -1,0 +1,67 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+export async function getStaticPaths() {
+  const books = await getCollection('books');
+  return books.map((book) => ({ params: { id: book.id }, props: { book } }));
+}
+
+const { book } = Astro.props;
+const {
+  title,
+  publisher,
+  publishedDate,
+  cover,
+  coverAlt,
+  summary,
+  purchaseUrl,
+} = book.data;
+const { Content } = await render(book);
+---
+
+<BaseLayout title={title} description={summary}>
+  <article class="max-w-content mx-auto px-4 py-12 sm:px-6 md:py-16">
+    <a
+      href="/books"
+      class="text-primary hover:text-primary-hover inline-flex min-h-11 items-center gap-2 font-medium"
+    >
+      <Icon name="ph:arrow-left" class="size-5" aria-hidden="true" />
+      All books
+    </a>
+    <div class="mt-6 grid gap-8 md:grid-cols-[16rem_1fr] md:gap-12">
+      <Image
+        src={cover}
+        alt={coverAlt}
+        width={480}
+        class="border-border aspect-[3/4] w-48 rounded-md border object-cover md:w-full"
+      />
+      <div>
+        <p class="text-fg-muted text-sm">
+          {publisher} &middot;
+          <time datetime={publishedDate.toISOString()}>
+            {publishedDate.toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+            })}
+          </time>
+        </p>
+        <h1 class="mt-2 text-4xl font-bold tracking-tight">{title}</h1>
+        <p class="text-fg-muted mt-4 max-w-prose text-lg">{summary}</p>
+        <div class="mt-6 max-w-prose space-y-4">
+          <Content />
+        </div>
+        <a
+          href={purchaseUrl}
+          rel="noopener"
+          class="bg-primary text-primary-fg hover:bg-primary-hover mt-8 inline-flex min-h-11 items-center gap-2 rounded-md px-5 font-medium transition-colors"
+        >
+          Buy from {publisher}
+          <Icon name="ph:arrow-up-right" class="size-5" aria-hidden="true" />
+        </a>
+      </div>
+    </div>
+  </article>
+</BaseLayout>

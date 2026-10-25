@@ -1,0 +1,18 @@
+---
+import { Icon } from 'astro-icon/components';
+import { socials } from '../data/site';
+---
+
+<ul class="flex flex-wrap items-center gap-1">
+  {socials.map((s) => (
+    <li>
+      <a
+        href={s.href}
+        aria-label={s.label}
+        class="text-fg-muted hover:text-primary hover:bg-surface-raised inline-flex size-11 items-center justify-center rounded-md transition-colors"
+      >
+        <Icon name={s.icon} class="size-6" aria-hidden="true" />
+      </a>
+    </li>
+  ))}
+</ul>

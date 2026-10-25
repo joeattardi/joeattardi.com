@@ -1,0 +1,37 @@
+---
+import { Image } from 'astro:assets';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  book: CollectionEntry<'books'>;
+}
+
+const { book } = Astro.props;
+const { title, publisher, publishedDate, cover, coverAlt, summary } = book.data;
+---
+
+<article class="bg-surface border-border flex flex-col gap-5 rounded-xl border p-5 sm:flex-row">
+  <Image
+    src={cover}
+    alt={coverAlt}
+    width={240}
+    class="border-border aspect-[3/4] w-32 shrink-0 rounded-md border object-cover"
+  />
+  <div class="flex flex-col items-start">
+    <p class="text-fg-muted text-sm">
+      {publisher} &middot;
+      <time datetime={publishedDate.toISOString()}>
+        {publishedDate.getFullYear()}
+      </time>
+    </p>
+    <h3 class="mt-1 text-2xl font-semibold tracking-tight">
+      <a
+        href={`/books/${book.id}`}
+        class="hover:text-primary transition-colors"
+      >
+        {title}
+      </a>
+    </h3>
+    <p class="text-fg-muted mt-2">{summary}</p>
+  </div>
+</article>
