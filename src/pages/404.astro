@@ -1,0 +1,128 @@
+---
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '../layouts/BaseLayout.astro';
+
+const destinations = [
+  {
+    label: 'Books',
+    href: '/books',
+    icon: 'ph:book-open-text',
+    blurb: 'Published with Apress and O’Reilly',
+  },
+  {
+    label: 'Articles',
+    href: '/articles',
+    icon: 'ph:article',
+    blurb: 'Freelance writing on frontend topics',
+  },
+  {
+    label: 'Blog',
+    href: '/blog',
+    icon: 'ph:notebook',
+    blurb: 'Notes, tutorials, and opinions',
+  },
+  {
+    label: 'Projects',
+    href: '/projects',
+    icon: 'ph:code',
+    blurb: 'Open source and side projects',
+  },
+];
+---
+
+<BaseLayout
+  title="Page not found"
+  description="The page you were looking for could not be found."
+>
+  <meta slot="head" name="robots" content="noindex" />
+
+  <section class="mx-auto flex max-w-content flex-col items-center px-4 pt-14 pb-20 text-center sm:px-6 md:pt-24 md:pb-28">
+    <p
+      class="numerals text-primary flex items-baseline font-serif leading-none font-bold tracking-tight select-none"
+      aria-hidden="true"
+    >
+      <span>4</span>
+      <span class="loose-zero inline-block">0</span>
+      <span>4</span>
+    </p>
+
+    <p class="border-border bg-surface text-fg-muted mt-8 inline-flex max-w-full items-center gap-2 overflow-hidden rounded-md border px-3 py-2 font-mono text-sm">
+      <span class="text-accent shrink-0">GET</span>
+      <span id="missing-path" class="truncate">
+        this page
+      </span>
+      <span class="shrink-0" aria-hidden="true">
+        &rarr;
+      </span>
+      <span class="shrink-0">404 Not Found</span>
+    </p>
+    <script is:inline>
+      // The page is static, so fill in the requested path on the client
+      document.getElementById('missing-path').textContent = location.pathname;
+    </script>
+
+    <h1 class="mt-8 text-4xl font-bold tracking-tight text-balance">
+      This page doesn’t exist
+    </h1>
+    <p class="text-fg-muted mt-4 max-w-prose text-lg text-pretty">
+      It may have moved, been renamed, or never existed in the first place. Try
+      one of these instead, or head back to the home page.
+    </p>
+
+    <a
+      href="/"
+      class="bg-primary text-primary-fg hover:bg-primary-hover mt-8 inline-flex min-h-11 items-center gap-2 rounded-md px-5 font-medium transition-colors"
+    >
+      <Icon name="ph:arrow-left" class="size-5" aria-hidden="true" />
+      Back to home
+    </a>
+
+    <nav aria-label="Suggested pages" class="mt-14 w-full max-w-3xl">
+      <ul class="grid gap-4 text-left sm:grid-cols-2">
+        {destinations.map((d) => (
+          <li>
+            <a
+              href={d.href}
+              class="group border-border bg-surface hover:border-primary flex min-h-11 items-center gap-4 rounded-lg border p-4 transition-colors"
+            >
+              <span class="bg-surface-raised text-primary flex size-11 shrink-0 items-center justify-center rounded-md">
+                <Icon name={d.icon} class="size-6" aria-hidden="true" />
+              </span>
+              <span class="min-w-0 flex-1">
+                <span class="text-fg block font-medium">{d.label}</span>
+                <span class="text-fg-muted block text-sm">{d.blurb}</span>
+              </span>
+              <Icon
+                name="ph:arrow-right"
+                class="text-fg-muted group-hover:text-primary size-5 shrink-0 transition-[color,translate] group-hover:translate-x-1"
+                aria-hidden="true"
+              />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  </section>
+</BaseLayout>
+
+<style>
+  .numerals {
+    font-size: clamp(7rem, 4rem + 16vw, 13rem);
+    font-variation-settings: 'SOFT' 100;
+  }
+
+  /* The middle zero has come loose and settles at a slight tilt */
+  .loose-zero {
+    transform-origin: 50% 90%;
+    rotate: 12deg;
+    translate: 0 0.04em;
+    animation: come-loose 900ms cubic-bezier(0.34, 1.56, 0.64, 1) 300ms both;
+  }
+
+  @keyframes come-loose {
+    from {
+      rotate: 0deg;
+      translate: 0 0;
+    }
+  }
+</style>
