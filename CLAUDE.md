@@ -36,7 +36,7 @@ Before declaring any task complete, run and pass:
 3. `npm run format:check`
 4. `npm run build`
 
-Run `npm run lighthouse` after changes to layout, fonts, images, or scripts. Target scores of 95+ for Performance, Accessibility, Best Practices, and SEO. Report any regression. ONLY run lighthouse before committing. Do not run it after making incremental changes.
+Run `npm run lighthouse` only before pushing, when the commits being pushed change layout, fonts, images, or scripts. Do not run it after incremental changes or before each commit. Target scores of 95+ for Performance, Accessibility, Best Practices, and SEO. Report any regression.
 
 ## Git
 
