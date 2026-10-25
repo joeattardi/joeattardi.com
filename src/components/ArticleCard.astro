@@ -1,6 +1,7 @@
 ---
 import { Icon } from 'astro-icon/components';
 import type { CollectionEntry } from 'astro:content';
+import { publicationLogos } from '../data/publications';
 import Tag from './Tag.astro';
 
 interface Props {
@@ -9,17 +10,30 @@ interface Props {
 
 const { article } = Astro.props;
 const { title, publication, publishedDate, url, summary, tags } = article.data;
+const logo = publicationLogos[publication];
 ---
 
 <article class="bg-surface border-border rounded-xl border p-5">
-  <p class="text-fg-muted text-sm">
-    {publication} &middot;
-    <time datetime={publishedDate.toISOString()}>
-      {publishedDate.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-      })}
-    </time>
+  <p class="text-fg-muted flex items-center gap-2 text-sm">
+    {logo && 'icon' in logo && (
+      <Icon name={logo.icon} class="size-5 shrink-0" aria-hidden="true" />
+    )}
+    {logo && 'mask' in logo && (
+      <span
+        class="publication-mask size-5 shrink-0"
+        style={`--mask: url(${logo.mask})`}
+        aria-hidden="true"
+      />
+    )}
+    <span>
+      {publication} &middot;
+      <time datetime={publishedDate.toISOString()}>
+        {publishedDate.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+        })}
+      </time>
+    </span>
   </p>
   <h3 class="mt-1 text-xl font-semibold tracking-tight">
     <a
@@ -45,3 +59,10 @@ const { title, publication, publishedDate, url, summary, tags } = article.data;
     </ul>
   )}
 </article>
+
+<style>
+  .publication-mask {
+    background-color: currentColor;
+    mask: var(--mask) center / contain no-repeat;
+  }
+</style>
