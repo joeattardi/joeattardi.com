@@ -1,0 +1,34 @@
+---
+import { Icon } from 'astro-icon/components';
+import { publicationLogos } from '../data/publications';
+
+interface Props {
+  publication: string;
+  class?: string;
+}
+
+const { publication, class: className = 'size-5' } = Astro.props;
+const logo = publicationLogos[publication];
+---
+
+{logo && 'icon' in logo && (
+  <Icon
+    name={logo.icon}
+    class:list={['shrink-0', className]}
+    aria-hidden="true"
+  />
+)}
+{logo && 'mask' in logo && (
+  <span
+    class:list={['publication-mask shrink-0', className]}
+    style={`--mask: url(${logo.mask})`}
+    aria-hidden="true"
+  />
+)}
+
+<style>
+  .publication-mask {
+    background-color: currentColor;
+    mask: var(--mask) center / contain no-repeat;
+  }
+</style>

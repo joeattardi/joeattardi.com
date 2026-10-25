@@ -1,0 +1,62 @@
+---
+import { Icon } from 'astro-icon/components';
+import type { CollectionEntry } from 'astro:content';
+import { publicationLogos } from '../data/publications';
+import PublicationLogo from './PublicationLogo.astro';
+import Tag from './Tag.astro';
+
+interface Props {
+  article: CollectionEntry<'articles'>;
+  label?: string;
+}
+
+const { article, label = 'Latest article' } = Astro.props;
+const { title, publication, publishedDate, url, summary, tags } = article.data;
+const hasLogo = publication in publicationLogos;
+const date = publishedDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'long',
+  day: 'numeric',
+});
+---
+
+<article class="bg-surface border-border grid overflow-hidden rounded-2xl border lg:grid-cols-5">
+  <div class="bg-surface-raised border-border text-fg flex items-center gap-4 border-b p-6 sm:p-8 lg:col-span-2 lg:flex-col lg:items-start lg:justify-between lg:border-r lg:border-b-0">
+    {hasLogo && (
+      <PublicationLogo publication={publication} class="size-12 lg:size-20" />
+    )}
+    <div>
+      <p class="font-serif text-2xl font-semibold tracking-tight">
+        {publication}
+      </p>
+      <p class="text-fg-muted mt-1">
+        <time datetime={publishedDate.toISOString()}>{date}</time>
+      </p>
+    </div>
+  </div>
+  <div class="flex flex-col justify-center p-6 sm:p-8 lg:col-span-3">
+    <p class="text-accent font-mono text-sm font-medium tracking-wide uppercase">
+      {label}
+    </p>
+    <h2 class="mt-2 text-3xl font-bold tracking-tight">{title}</h2>
+    <p class="text-fg-muted mt-4 text-lg">{summary}</p>
+    {tags.length > 0 && (
+      <ul class="mt-6 flex flex-wrap gap-2" aria-label="Tags">
+        {tags.map((tag) => (
+          <Tag>{tag}</Tag>
+        ))}
+      </ul>
+    )}
+    <div class="mt-8">
+      <a
+        href={url}
+        rel="noopener"
+        class="bg-primary text-primary-fg hover:bg-primary-hover inline-flex min-h-11 items-center gap-2 rounded-lg px-5 font-medium transition-colors"
+      >
+        Read on {publication}
+        <span class="sr-only">: {title}</span>
+        <Icon name="ph:arrow-up-right" class="size-5" aria-hidden="true" />
+      </a>
+    </div>
+  </div>
+</article>

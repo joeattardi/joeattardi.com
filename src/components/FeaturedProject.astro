@@ -1,0 +1,66 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import type { CollectionEntry } from 'astro:content';
+import Tag from './Tag.astro';
+
+interface Props {
+  project: CollectionEntry<'projects'>;
+  label?: string;
+}
+
+const { project, label = 'Latest project' } = Astro.props;
+const { title, summary, tech, repoUrl, demoUrl, image, imageAlt } =
+  project.data;
+const href = demoUrl ?? repoUrl;
+---
+
+<article class="group bg-surface border-border grid overflow-hidden rounded-2xl border lg:grid-cols-5">
+  {image && (
+    <div class="border-border overflow-hidden border-b lg:col-span-3 lg:border-r lg:border-b-0">
+      <Image
+        src={image}
+        alt={imageAlt ?? ''}
+        width={1200}
+        widths={[600, 900, 1200, 1600]}
+        sizes="(min-width: 1152px) 690px, (min-width: 1024px) 60vw, 100vw"
+        loading="eager"
+        class="aspect-video h-full w-full object-cover object-top transition-transform duration-500 ease-out motion-safe:group-hover:scale-105"
+      />
+    </div>
+  )}
+  <div class="flex flex-col justify-center p-6 sm:p-8 lg:col-span-2">
+    <p class="text-accent font-mono text-sm font-medium tracking-wide uppercase">
+      {label}
+    </p>
+    <h2 class="mt-2 text-3xl font-bold tracking-tight">{title}</h2>
+    <p class="text-fg-muted mt-4 text-lg">{summary}</p>
+    <ul class="mt-6 flex flex-wrap gap-2" aria-label="Technologies">
+      {tech.map((t) => (
+        <Tag>{t}</Tag>
+      ))}
+    </ul>
+    {href && (
+      <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+        <a
+          href={href}
+          rel="noopener"
+          class="bg-primary text-primary-fg hover:bg-primary-hover inline-flex min-h-11 items-center gap-2 rounded-lg px-5 font-medium transition-colors"
+        >
+          {demoUrl ? 'Visit' : 'View source'}
+          <span class="sr-only"> {title}</span>
+          <Icon name="ph:arrow-up-right" class="size-5" aria-hidden="true" />
+        </a>
+        {repoUrl && demoUrl && (
+          <a
+            href={repoUrl}
+            class="text-primary hover:text-primary-hover inline-flex min-h-11 items-center gap-2 font-medium transition-colors"
+          >
+            <Icon name="fa6-brands:github" class="size-5" aria-hidden="true" />
+            Source<span class="sr-only"> for {title}</span>
+          </a>
+        )}
+      </div>
+    )}
+  </div>
+</article>

@@ -1,0 +1,75 @@
+---
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import type { CollectionEntry } from 'astro:content';
+
+interface Props {
+  book: CollectionEntry<'books'>;
+  label?: string;
+}
+
+const { book, label = 'Latest book' } = Astro.props;
+const {
+  title,
+  publisher,
+  publishedDate,
+  cover,
+  coverAlt,
+  summary,
+  amazonUrl,
+  toc,
+} = book.data;
+const href = `/books/${book.id}`;
+---
+
+<article class="group bg-surface border-border grid overflow-hidden rounded-2xl border lg:grid-cols-5">
+  <div class="bg-surface-raised border-border flex items-center justify-center border-b px-6 py-10 sm:py-12 lg:col-span-2 lg:border-r lg:border-b-0">
+    <Image
+      src={cover}
+      alt={coverAlt}
+      width={480}
+      widths={[240, 360, 480]}
+      sizes="(min-width: 1024px) 16rem, 12rem"
+      loading="eager"
+      class="border-border aspect-[3/4] w-48 -rotate-2 rounded-md border object-cover shadow-xl transition-[rotate,scale] duration-300 group-hover:rotate-0 motion-safe:animate-cover-reveal motion-safe:group-hover:scale-105 lg:w-64"
+    />
+  </div>
+  <div class="flex flex-col justify-center p-6 sm:p-8 lg:col-span-3">
+    <p class="text-accent font-mono text-sm font-medium tracking-wide uppercase">
+      {label}
+    </p>
+    <h2 class="mt-2 text-3xl font-bold tracking-tight">
+      <a href={href} class="hover:text-primary transition-colors">
+        {title}
+      </a>
+    </h2>
+    <p class="text-fg-muted mt-2">
+      {publisher} &middot;
+      <time datetime={publishedDate.toISOString()}>
+        {publishedDate.toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'long',
+        })}
+      </time>
+      {toc.length > 0 && <> &middot; {toc.length} chapters</>}
+    </p>
+    <p class="text-fg-muted mt-4 text-lg">{summary}</p>
+    <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+      <a
+        href={amazonUrl}
+        rel="noopener"
+        class="bg-primary text-primary-fg hover:bg-primary-hover inline-flex min-h-11 items-center gap-2 rounded-lg px-5 font-medium transition-colors"
+      >
+        Buy on Amazon<span class="sr-only">: {title}</span>
+        <Icon name="ph:arrow-up-right" class="size-5" aria-hidden="true" />
+      </a>
+      <a
+        href={href}
+        class="text-primary hover:text-primary-hover inline-flex min-h-11 items-center gap-2 font-medium transition-colors"
+      >
+        Details and contents<span class="sr-only"> for {title}</span>
+        <Icon name="ph:arrow-right" class="size-5" aria-hidden="true" />
+      </a>
+    </div>
+  </div>
+</article>

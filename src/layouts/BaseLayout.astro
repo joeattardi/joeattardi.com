@@ -65,7 +65,14 @@ const ogImage = new URL(image, Astro.site);
       })();
     </script>
   </head>
-  <body class="flex min-h-screen flex-col">
+  <body class="relative isolate flex min-h-screen flex-col">
+    <div class="bg-grid" aria-hidden="true">
+      <div class="bg-grid-plane">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
     <a
       href="#main"
       class="bg-primary text-primary-fg fixed top-2 left-2 z-50 -translate-y-20 rounded-md px-4 py-3 font-medium focus:translate-y-0"

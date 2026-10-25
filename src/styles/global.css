@@ -62,6 +62,112 @@
   --color-accent: #38bdf8;
 }
 
+/* Faint blueprint-style grid behind all content, slightly rotated and drifting */
+.bg-grid {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  /* Lets the plane size its overhang from this layer's full page height */
+  container-type: size;
+}
+
+.bg-grid-plane {
+  /* Light mode needs a darker base color; the light border is too close to the background */
+  --grid-line: color-mix(in oklab, var(--color-fg-muted) 5%, transparent);
+  --grid-twinkle: color-mix(in oklab, var(--color-primary) 40%, transparent);
+  --grid-size: 2rem;
+
+  :where(.dark) & {
+    --grid-line: color-mix(in oklab, var(--color-border) 10%, transparent);
+    --grid-twinkle: color-mix(in oklab, var(--color-primary) 30%, transparent);
+  }
+  position: absolute;
+  /*
+   * Oversized so the rotated edges never show. Rotating by 6deg swings each
+   * edge out by about 5.25% of the opposite dimension, plus one cell of drift.
+   */
+  inset-block: calc(-5.5cqw - var(--grid-size));
+  inset-inline: calc(-5.5cqh - var(--grid-size));
+  background-image:
+    linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+    linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+  background-size: var(--grid-size) var(--grid-size);
+  transform: rotate(-6deg);
+  animation: grid-drift 20s linear infinite;
+
+  /* Each layer lights up a sparse set of intersections on its own schedule */
+  & > span {
+    --tile: calc(var(--grid-size) * var(--every));
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    background-image: radial-gradient(
+      circle,
+      var(--grid-twinkle) 0 1.5px,
+      transparent 2.5px
+    );
+    background-size: var(--tile) var(--tile);
+    /* Centers each dot on a line crossing, shifted by a few cells per layer */
+    background-position: calc(
+        0.5px - var(--tile) / 2 + var(--grid-size) * var(--dx)
+      )
+      calc(0.5px - var(--tile) / 2 + var(--grid-size) * var(--dy));
+    animation: grid-twinkle var(--duration) ease-in-out var(--delay) infinite;
+  }
+  & > span:nth-child(1) {
+    --every: 10;
+    --dx: 3;
+    --dy: 7;
+    --duration: 11s;
+    --delay: 2s;
+  }
+  & > span:nth-child(2) {
+    --every: 14;
+    --dx: 9;
+    --dy: 2;
+    --duration: 17s;
+    --delay: 6s;
+  }
+  & > span:nth-child(3) {
+    --every: 18;
+    --dx: 5;
+    --dy: 12;
+    --duration: 23s;
+    --delay: 11s;
+  }
+}
+
+/* Moves exactly one cell along the rotated axes so the loop is seamless */
+@keyframes grid-drift {
+  to {
+    transform: rotate(-6deg) translate(var(--grid-size), var(--grid-size));
+  }
+}
+
+/* A brief flash, then dark for the rest of the cycle */
+@keyframes grid-twinkle {
+  0%,
+  10%,
+  100% {
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bg-grid-plane {
+    animation: none;
+
+    & > span {
+      display: none;
+    }
+  }
+}
+
 @layer base {
   html {
     color-scheme: light;
