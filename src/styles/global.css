@@ -59,6 +59,10 @@
   html.dark {
     color-scheme: dark;
   }
+  /* Lock page scroll behind the full-screen mobile nav */
+  html:has(#mobile-nav[open]) {
+    overflow: hidden;
+  }
   body {
     @apply bg-bg font-sans text-fg antialiased;
   }

@@ -1,5 +1,6 @@
 ---
 import { Icon } from 'astro-icon/components';
+import Logo from './Logo.astro';
 import ThemeToggle from './ThemeToggle.astro';
 import { nav, site } from '../data/site';
 
@@ -18,8 +19,9 @@ const linkClass =
   <div class="mx-auto flex max-w-content items-center justify-between gap-4 px-4 py-2 sm:px-6">
     <a
       href="/"
-      class="text-fg font-serif inline-flex min-h-11 items-center text-xl font-semibold tracking-tight"
+      class="text-fg font-serif inline-flex min-h-11 items-center text-xl font-semibold tracking-tight gap-2.5"
     >
+      <Logo class="size-8" />
       {site.name}
     </a>
 
@@ -42,41 +44,80 @@ const linkClass =
 
       <ThemeToggle />
 
-      <details class="group relative md:hidden">
-        <summary
-          class="text-fg hover:bg-surface-raised inline-flex size-11 cursor-pointer list-none items-center justify-center rounded-md transition-colors [&::-webkit-details-marker]:hidden"
-          aria-label="Menu"
-        >
-          <Icon
-            name="ph:list"
-            class="size-6 group-open:hidden"
-            aria-hidden="true"
-          />
-          <Icon
-            name="ph:x"
-            class="hidden size-6 group-open:block"
-            aria-hidden="true"
-          />
-        </summary>
-        <nav
-          aria-label="Mobile"
-          class="bg-surface border-border absolute right-0 mt-2 w-56 rounded-lg border p-2 shadow-lg"
-        >
-          <ul>
-            {nav.map((item) => (
-              <li>
-                <a
-                  href={item.href}
-                  class={`${linkClass} w-full`}
-                  aria-current={isCurrent(item.href) ? 'page' : undefined}
-                >
-                  {item.label}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </details>
+      <button
+        type="button"
+        id="mobile-nav-open"
+        class="text-fg hover:bg-surface-raised inline-flex size-11 items-center justify-center rounded-md transition-colors md:hidden"
+        aria-label="Menu"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="mobile-nav"
+      >
+        <Icon name="ph:list" class="size-6" aria-hidden="true" />
+      </button>
     </div>
   </div>
+
+  <!-- showModal() puts this in the top layer, so it covers the viewport despite the header's backdrop-blur -->
+  <dialog
+    id="mobile-nav"
+    aria-label="Menu"
+    class="bg-bg text-fg m-0 h-dvh max-h-none w-full max-w-none opacity-0 transition-[opacity,display,overlay] transition-discrete duration-200 backdrop:bg-transparent open:opacity-100 starting:open:opacity-0 md:hidden"
+  >
+    <div class="mx-auto flex h-full max-w-content flex-col px-4 py-2 sm:px-6">
+      <div class="flex items-center justify-between gap-4">
+        <a
+          href="/"
+          class="text-fg font-serif inline-flex min-h-11 items-center text-xl font-semibold tracking-tight gap-2.5"
+        >
+          <Logo class="size-8" />
+          {site.name}
+        </a>
+        <button
+          type="button"
+          id="mobile-nav-close"
+          class="text-fg hover:bg-surface-raised inline-flex size-11 items-center justify-center rounded-md transition-colors"
+          aria-label="Close menu"
+        >
+          <Icon name="ph:x" class="size-6" aria-hidden="true" />
+        </button>
+      </div>
+
+      <nav aria-label="Mobile" class="mt-6">
+        <ul class="flex flex-col items-end gap-2 text-right">
+          {nav.map((item) => (
+            <li>
+              <a
+                href={item.href}
+                class="text-fg-muted hover:text-fg aria-[current=page]:text-fg font-serif inline-flex min-h-11 items-center py-2 text-4xl font-semibold tracking-tight transition-colors"
+                aria-current={isCurrent(item.href) ? 'page' : undefined}
+              >
+                {item.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    </div>
+  </dialog>
 </header>
+
+<script>
+  const dialog = document.getElementById('mobile-nav') as HTMLDialogElement;
+  const openButton = document.getElementById('mobile-nav-open');
+  const closeButton = document.getElementById('mobile-nav-close');
+
+  openButton?.addEventListener('click', () => {
+    dialog.showModal();
+    openButton.setAttribute('aria-expanded', 'true');
+  });
+  closeButton?.addEventListener('click', () => dialog.close());
+  dialog.addEventListener('close', () =>
+    openButton?.setAttribute('aria-expanded', 'false'),
+  );
+
+  // Don't leave the overlay open if the viewport grows past the mobile breakpoint
+  window
+    .matchMedia('(min-width: 48rem)')
+    .addEventListener('change', (e) => e.matches && dialog.close());
+</script>
