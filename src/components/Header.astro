@@ -22,14 +22,14 @@ const linkClass =
       class="text-fg font-serif inline-flex min-h-11 items-center text-xl font-semibold tracking-tight gap-2.5"
     >
       <Logo class="size-8" />
-      {site.name}
+      <span class="site-name">{site.name}</span>
     </a>
 
     <div class="flex items-center gap-1">
       <nav aria-label="Main" class="hidden md:block">
         <ul class="flex items-center gap-1">
-          {nav.map((item) => (
-            <li>
+          {nav.map((item, i) => (
+            <li class="nav-item" style={`--i: ${i}`}>
               <a
                 href={item.href}
                 class={linkClass}
@@ -101,6 +101,49 @@ const linkClass =
     </div>
   </dialog>
 </header>
+
+<style>
+  /* Fades in as the logo finishes drawing (see Logo.astro); nav links stagger in alongside */
+  @media (prefers-reduced-motion: no-preference) {
+    /* `scale` is separate from `transform`, so the intro's fill doesn't override it */
+    .site-name {
+      transform-origin: left center;
+      transition: scale 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    :global(a:hover) > .site-name,
+    :global(a:focus-visible) > .site-name {
+      scale: 1.05;
+    }
+    :global(html.intro) .site-name {
+      animation: site-name-in 0.5s ease-out 0.7s both;
+    }
+    :global(html.intro) .nav-item {
+      animation: nav-item-in 0.5s ease-out calc(0.7s + var(--i) * 0.1s) both;
+    }
+  }
+
+  @keyframes site-name-in {
+    from {
+      opacity: 0;
+      transform: translateX(-0.25rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @keyframes nav-item-in {
+    from {
+      opacity: 0;
+      transform: translateY(-0.25rem);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+</style>
 
 <script>
   const dialog = document.getElementById('mobile-nav') as HTMLDialogElement;

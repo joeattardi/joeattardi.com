@@ -16,9 +16,69 @@ const { class: className } = Astro.props;
   class={className}
   aria-hidden="true"
 >
-  <path class="stroke-primary" d="M19.3 6.3 25.8 23.3M15.9 17.3h7.6"></path>
   <path
-    class="stroke-fg"
+    class="logo-a stroke-primary"
+    pathLength="1"
+    d="M19.3 6.3 25.8 23.3M15.9 17.3h7.6"
+  ></path>
+  <path
+    class="logo-j stroke-fg"
+    pathLength="1"
     d="M12.8 6.3h6.5l-6 15.5q-1.8 4.6-5.4 3.3-2-.8-1.8-3.5"
   ></path>
 </svg>
+
+<style>
+  /* On hover of the parent link, the J redraws and the A follows a beat later */
+  @media (prefers-reduced-motion: no-preference) {
+    svg {
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    :global(a:hover) svg,
+    :global(a:focus-visible) svg {
+      transform: rotate(-4deg) scale(1.06);
+    }
+    .logo-j,
+    .logo-a {
+      stroke-dasharray: 1;
+    }
+    :global(html.intro) .logo-j {
+      animation: logo-draw 0.7s cubic-bezier(0.65, 0, 0.35, 1) both;
+    }
+    :global(html.intro) .logo-a {
+      animation: logo-draw 0.6s cubic-bezier(0.65, 0, 0.35, 1) 0.25s both;
+    }
+    /* Same animation under a second name: adding it on hover replays the draw
+       without restarting the page-load one when the pointer leaves */
+    :global(a:hover) .logo-j,
+    :global(a:focus-visible) .logo-j {
+      animation:
+        logo-draw 0.7s cubic-bezier(0.65, 0, 0.35, 1) both,
+        logo-redraw 0.7s cubic-bezier(0.65, 0, 0.35, 1) both;
+    }
+    :global(a:hover) .logo-a,
+    :global(a:focus-visible) .logo-a {
+      animation:
+        logo-draw 0.6s cubic-bezier(0.65, 0, 0.35, 1) 0.25s both,
+        logo-redraw 0.6s cubic-bezier(0.65, 0, 0.35, 1) 0.25s both;
+    }
+  }
+
+  @keyframes logo-redraw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+
+  @keyframes logo-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+</style>

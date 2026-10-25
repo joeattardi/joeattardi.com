@@ -54,6 +54,14 @@ const ogImage = new URL(image, Astro.site);
           (theme !== 'light' &&
             window.matchMedia('(prefers-color-scheme: dark)').matches);
         document.documentElement.classList.toggle('dark', dark);
+
+        // Header intro animation plays on a fresh load or reload, but not when
+        // following an in-site link or using back/forward
+        const nav = performance.getEntriesByType('navigation')[0];
+        const fromSite = document.referrer.startsWith(location.origin);
+        if (nav?.type === 'reload' || !fromSite) {
+          document.documentElement.classList.add('intro');
+        }
       })();
     </script>
   </head>
