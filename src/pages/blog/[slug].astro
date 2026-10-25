@@ -1,0 +1,242 @@
+---
+import { render } from 'astro:content';
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import TagList from '../../components/blog/TagList.astro';
+import ShareLinks from '../../components/blog/ShareLinks.astro';
+import PostTitle from '../../components/blog/PostTitle.astro';
+import {
+  coverClass,
+  formatDate,
+  getPosts,
+  plainTitle,
+  readingTime,
+  tagHref,
+  type Post,
+} from '../../lib/blog';
+import { site } from '../../data/site';
+import '../../styles/prose.css';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, i) => ({
+    params: { slug: post.id },
+    props: { post, newer: posts[i - 1], older: posts[i + 1] },
+  }));
+}
+
+interface Props {
+  post: Post;
+  newer?: Post;
+  older?: Post;
+}
+
+const { post, newer, older } = Astro.props;
+const {
+  title,
+  subtitle,
+  summary,
+  publishedDate,
+  updatedDate,
+  cover,
+  coverAlt,
+  tags,
+} = post.data;
+const { Content } = await render(post);
+// Hashnode stamped some posts as updated minutes after publishing; only call
+// out an update that landed on a later day
+const showUpdated =
+  !!updatedDate &&
+  formatDate(updatedDate) !== formatDate(publishedDate) &&
+  updatedDate > publishedDate;
+// Generated title card, see src/pages/og/blog/[slug].png.ts
+const ogImage = `/og/blog/${post.id}.png`;
+const adjacentClass =
+  'group bg-surface border-border hover:border-primary flex flex-col gap-1 rounded-xl border p-5 transition-colors';
+const adjacentTitleClass =
+  'group-hover:text-primary font-serif text-xl font-semibold tracking-tight text-balance transition-colors';
+---
+
+<BaseLayout
+  title={plainTitle(title)}
+  description={summary}
+  image={ogImage}
+  type="article"
+>
+  <Fragment slot="head">
+    <meta
+      property="article:published_time"
+      content={publishedDate.toISOString()}
+    />
+    {updatedDate && (
+      <meta
+        property="article:modified_time"
+        content={updatedDate.toISOString()}
+      />
+    )}
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={plainTitle(title)} />
+    <meta property="article:author" content={site.name} />
+    {tags.map((tag) => (
+      <meta property="article:tag" content={tag} />
+    ))}
+  </Fragment>
+
+  <div class="reading-progress" aria-hidden="true"></div>
+
+  <article class="px-4 pt-12 pb-16 sm:px-6 md:pt-20">
+    <header class="mx-auto max-w-3xl text-center">
+      {tags.length > 0 && (
+        <ul
+          class="text-accent flex flex-wrap justify-center gap-x-3 font-mono text-sm font-medium tracking-wide uppercase"
+          aria-label="Tags"
+        >
+          {tags.map((tag) => (
+            <li>
+              <a
+                href={tagHref(tag)}
+                class="hover:text-primary-hover inline-flex min-h-11 items-center transition-colors"
+              >
+                {tag}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+      <h1 class="mt-2 text-5xl leading-tight font-bold tracking-tight text-balance">
+        <PostTitle title={title} />
+      </h1>
+      {subtitle && (
+        <p class="text-fg-muted mt-5 font-serif text-2xl italic text-balance">
+          {subtitle}
+        </p>
+      )}
+      <p class="border-border text-fg-muted mx-auto mt-8 flex max-w-prose flex-wrap items-center justify-center gap-x-3 gap-y-1 border-y py-3 text-sm font-medium tracking-wide uppercase">
+        <span>By {site.name}</span>
+        <span aria-hidden="true">&middot;</span>
+        <time datetime={publishedDate.toISOString()}>
+          {formatDate(publishedDate)}
+        </time>
+        <span aria-hidden="true">&middot;</span>
+        <span>{readingTime(post)} min read</span>
+      </p>
+    </header>
+
+    {cover && (
+      <figure class="mx-auto mt-10 max-w-content md:mt-14">
+        <Image
+          src={cover}
+          alt={coverAlt}
+          widths={[640, 960, 1280, 1600, 2000]}
+          sizes="(min-width: 72rem) 69rem, calc(100vw - 2rem)"
+          loading="eager"
+          fetchpriority="high"
+          class:list={[coverClass, 'border-border rounded-xl border']}
+        />
+      </figure>
+    )}
+
+    <div class="prose mx-auto mt-10 max-w-prose md:mt-14">
+      <Content />
+    </div>
+
+    <footer class="mx-auto mt-16 max-w-prose">
+      {showUpdated && (
+        <p class="text-fg-muted mb-6 text-sm">
+          Last updated{' '}
+          <time datetime={updatedDate.toISOString()}>
+            {formatDate(updatedDate)}
+          </time>
+        </p>
+      )}
+      {tags.length > 0 && (
+        <div class="border-border flex flex-wrap items-center gap-x-4 gap-y-3 border-t pt-6">
+          <p class="text-fg-muted text-sm font-semibold tracking-wide uppercase">
+            Filed under
+          </p>
+          <TagList tags={tags} />
+        </div>
+      )}
+      <div
+        class:list={['border-border border-t pt-6', tags.length > 0 && 'mt-6']}
+      >
+        <ShareLinks
+          title={plainTitle(title)}
+          url={new URL(Astro.url.pathname, Astro.site)}
+        />
+      </div>
+    </footer>
+
+    {(newer || older) && (
+      <nav
+        aria-label="More posts"
+        class="mx-auto mt-12 grid max-w-3xl gap-4 sm:grid-cols-2"
+      >
+        {newer && (
+          <a href={`/blog/${newer.id}`} class={adjacentClass}>
+            <span class="text-fg-muted inline-flex items-center gap-2 text-sm font-medium">
+              <Icon name="ph:arrow-left" class="size-4" aria-hidden="true" />
+              Newer post
+            </span>
+            <span class={adjacentTitleClass}>
+              <PostTitle title={newer.data.title} />
+            </span>
+          </a>
+        )}
+        {older && (
+          <a
+            href={`/blog/${older.id}`}
+            class:list={[adjacentClass, 'sm:col-start-2 sm:text-right']}
+          >
+            <span class="text-fg-muted inline-flex items-center gap-2 text-sm font-medium sm:justify-end">
+              Older post
+              <Icon name="ph:arrow-right" class="size-4" aria-hidden="true" />
+            </span>
+            <span class={adjacentTitleClass}>
+              <PostTitle title={older.data.title} />
+            </span>
+          </a>
+        )}
+      </nav>
+    )}
+
+    <div class="mt-10 text-center">
+      <a
+        href="/blog"
+        class="text-primary hover:text-primary-hover inline-flex min-h-11 items-center gap-2 font-medium"
+      >
+        <Icon name="ph:arrow-left" class="size-5" aria-hidden="true" />
+        All posts
+      </a>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  /* Scroll-driven, so it needs no JS; browsers without support simply don't show it */
+  @supports (animation-timeline: scroll()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .reading-progress {
+        position: fixed;
+        inset: 0 0 auto;
+        z-index: 50;
+        height: 3px;
+        background: var(--color-primary);
+        transform-origin: left;
+        animation: reading-progress linear both;
+        animation-timeline: scroll(root);
+      }
+    }
+  }
+
+  @keyframes reading-progress {
+    from {
+      scale: 0 1;
+    }
+    to {
+      scale: 1 1;
+    }
+  }
+</style>

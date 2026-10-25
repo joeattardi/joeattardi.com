@@ -1,0 +1,49 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import FeaturedPost from '../../components/blog/FeaturedPost.astro';
+import PostArchive from '../../components/blog/PostArchive.astro';
+import TopicList from '../../components/blog/TopicList.astro';
+import { FEATURED_COUNT, PAGE_SIZE, getPosts } from '../../lib/blog';
+
+const posts = await getPosts();
+const [lead, ...featured] = posts.slice(0, FEATURED_COUNT);
+const older = posts.slice(FEATURED_COUNT);
+const next = older.length > PAGE_SIZE ? '/blog/page/2' : undefined;
+---
+
+<BaseLayout
+  title="Blog"
+  description="Joe Attardi's blog: JavaScript, CSS, web platform APIs, accessibility, and lessons from two decades of building for the web."
+>
+  <PageHeader
+    title="Blog"
+    intro="JavaScript, CSS, web platform APIs, accessibility, and lessons from two decades of building for the web."
+  />
+  <div class="mx-auto max-w-content px-4 pb-16 sm:px-6">
+    {lead && (
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3 lg:grid-rows-[auto_auto]">
+        <FeaturedPost post={lead} lead />
+        {featured.map((post) => (
+          <FeaturedPost post={post} />
+        ))}
+      </div>
+    )}
+
+    <div class="mt-12 md:mt-16">
+      <TopicList posts={posts} />
+    </div>
+
+    {older.length > 0 && (
+      <section class="mt-12 md:mt-16" aria-labelledby="earlier-heading">
+        <h2
+          id="earlier-heading"
+          class="border-border mb-8 border-b pb-4 text-3xl font-bold tracking-tight"
+        >
+          Earlier posts
+        </h2>
+        <PostArchive posts={older.slice(0, PAGE_SIZE)} next={next} />
+      </section>
+    )}
+  </div>
+</BaseLayout>

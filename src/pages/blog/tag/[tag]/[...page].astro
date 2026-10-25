@@ -1,0 +1,66 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '../../../../layouts/BaseLayout.astro';
+import PostArchive from '../../../../components/blog/PostArchive.astro';
+import TopicList from '../../../../components/blog/TopicList.astro';
+import {
+  PAGE_SIZE,
+  getPosts,
+  getTags,
+  tagSlug,
+  type Post,
+} from '../../../../lib/blog';
+
+export const getStaticPaths = (async ({ paginate }) => {
+  const posts = await getPosts();
+  return getTags(posts).flatMap(({ name }) =>
+    paginate(
+      posts.filter((post) => post.data.tags.includes(name)),
+      {
+        params: { tag: tagSlug(name) },
+        props: { tag: name, posts },
+        pageSize: PAGE_SIZE,
+      },
+    ),
+  );
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: Page<Post>;
+  tag: string;
+  posts: Post[];
+}
+
+const { page, tag, posts } = Astro.props;
+const pageSuffix = page.currentPage > 1 ? `, page ${page.currentPage}` : '';
+---
+
+<BaseLayout
+  title={`Posts tagged ${tag}${pageSuffix}`}
+  description={`Blog posts by Joe Attardi about ${tag}.`}
+>
+  <div class="mx-auto max-w-content px-4 pt-12 pb-8 sm:px-6 md:pt-16">
+    <a
+      href="/blog"
+      class="text-primary hover:text-primary-hover inline-flex min-h-11 items-center gap-2 font-medium"
+    >
+      <Icon name="ph:arrow-left" class="size-5" aria-hidden="true" />
+      All posts
+    </a>
+    <p class="text-accent mt-6 font-mono text-sm font-medium tracking-wide uppercase">
+      Topic
+    </p>
+    <h1 class="mt-2 text-4xl font-bold tracking-tight">{tag}</h1>
+    <p class="text-fg-muted mt-4 text-lg">
+      {page.total} {page.total === 1 ? 'post' : 'posts'}
+      {pageSuffix}
+    </p>
+  </div>
+  <div class="mx-auto max-w-content px-4 pb-16 sm:px-6">
+    <div class="border-border mb-10 border-y py-6">
+      <TopicList posts={posts} current={tag} />
+    </div>
+    <PostArchive posts={page.data} next={page.url.next} />
+  </div>
+</BaseLayout>

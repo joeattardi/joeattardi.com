@@ -1,0 +1,192 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  title: string;
+  url: URL;
+}
+
+const { title, url } = Astro.props;
+const shareUrl = url.href;
+const encodedUrl = encodeURIComponent(shareUrl);
+const encodedTitle = encodeURIComponent(title);
+const encodedText = encodeURIComponent(`${title} ${shareUrl}`);
+
+// Plain intent links: no third-party scripts or tracking widgets
+const networks = [
+  {
+    label: 'X',
+    icon: 'fa6-brands:x-twitter',
+    href: `https://x.com/intent/post?text=${encodedTitle}&url=${encodedUrl}`,
+  },
+  {
+    label: 'Bluesky',
+    icon: 'fa6-brands:bluesky',
+    href: `https://bsky.app/intent/compose?text=${encodedText}`,
+  },
+  {
+    // share-offsite only accepts a URL and leaves the composer empty until
+    // LinkedIn can scrape the page; the feed composer takes prefilled text
+    label: 'LinkedIn',
+    icon: 'fa6-brands:linkedin',
+    href: `https://www.linkedin.com/feed/?shareActive=true&text=${encodedText}`,
+  },
+];
+const mailto = `mailto:?subject=${encodedTitle}&body=${encodedUrl}`;
+const buttonClass =
+  'border-border bg-surface text-fg-muted hover:border-primary hover:text-primary inline-flex size-11 items-center justify-center rounded-lg border transition-colors';
+---
+
+<div class="flex flex-wrap items-center gap-x-4 gap-y-3">
+  <p
+    id="share-heading"
+    class="text-fg-muted text-sm font-semibold tracking-wide uppercase"
+  >
+    Share
+  </p>
+  <ul class="flex flex-wrap gap-2" aria-labelledby="share-heading">
+    {networks.map(({ label, icon, href }) => (
+      <li>
+        <a
+          href={href}
+          class={buttonClass}
+          rel="noopener"
+          target="_blank"
+          aria-label={`Share on ${label} (opens in a new tab)`}
+          title={`Share on ${label}`}
+        >
+          <Icon name={icon} class="size-5" aria-hidden="true" />
+        </a>
+      </li>
+    ))}
+    <!-- Replaced by the native share button below when the browser supports it -->
+    <li data-email-item>
+      <a
+        href={mailto}
+        class={buttonClass}
+        aria-label="Share by email"
+        title="Share by email"
+      >
+        <Icon name="ph:envelope-simple" class="size-5" aria-hidden="true" />
+      </a>
+    </li>
+    <li hidden data-native-share-item>
+      <button
+        type="button"
+        class={buttonClass}
+        data-native-share
+        data-title={title}
+        data-url={shareUrl}
+        data-mailto={mailto}
+        aria-label="More sharing options"
+        title="More sharing options"
+      >
+        <Icon name="ph:share-network" class="size-5" aria-hidden="true" />
+      </button>
+    </li>
+    <!-- Shown by the script below; there is nothing to copy without JS -->
+    <li hidden data-copy-item>
+      <button
+        type="button"
+        class={buttonClass}
+        data-copy-link={shareUrl}
+        aria-label="Copy link"
+        title="Copy link"
+      >
+        <Icon
+          name="ph:link"
+          class="size-5"
+          aria-hidden="true"
+          data-copy-icon="idle"
+        />
+        <Icon
+          name="ph:check"
+          class="text-primary hidden size-5"
+          aria-hidden="true"
+          data-copy-icon="done"
+        />
+      </button>
+    </li>
+  </ul>
+  <p class="sr-only" aria-live="polite" data-copy-status></p>
+</div>
+
+<script>
+  // Native share sheet (Mail, Messages, AirDrop, installed apps). It works even
+  // without a default mail client, which a mailto link silently needs.
+  const emailItem = document.querySelector<HTMLElement>('[data-email-item]');
+  const shareItem = document.querySelector<HTMLElement>(
+    '[data-native-share-item]',
+  );
+  const shareButton = shareItem?.querySelector<HTMLButtonElement>(
+    '[data-native-share]',
+  );
+
+  if (emailItem && shareItem && shareButton && navigator.share) {
+    const { title = '', url = '', mailto = '' } = shareButton.dataset;
+    const data = { title, url };
+
+    if (navigator.canShare?.(data) ?? true) {
+      shareItem.hidden = false;
+      emailItem.hidden = true;
+
+      shareButton.addEventListener('click', async () => {
+        try {
+          await navigator.share(data);
+        } catch (error) {
+          // AbortError just means the person closed the share sheet
+          if (error instanceof DOMException && error.name === 'AbortError') {
+            return;
+          }
+          window.location.href = mailto;
+        }
+      });
+    }
+  }
+
+  const item = document.querySelector<HTMLElement>('[data-copy-item]');
+  const button = item?.querySelector<HTMLButtonElement>('[data-copy-link]');
+  const status = document.querySelector('[data-copy-status]');
+  const idle = button?.querySelector('[data-copy-icon="idle"]');
+  const done = button?.querySelector('[data-copy-icon="done"]');
+
+  // Some embedded browsers refuse the async Clipboard API; the legacy
+  // selection-based copy still works there
+  async function copy(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const field = document.createElement('textarea');
+      field.value = text;
+      field.setAttribute('readonly', '');
+      field.className = 'fixed -left-full opacity-0';
+      document.body.append(field);
+      field.select();
+      const copied = document.execCommand('copy');
+      field.remove();
+      if (!copied) throw new Error('Copy failed');
+    }
+  }
+
+  if (item && button && status && idle && done) {
+    item.hidden = false;
+    let timer: ReturnType<typeof setTimeout> | undefined;
+
+    button.addEventListener('click', async () => {
+      try {
+        await copy(button.dataset.copyLink ?? '');
+        status.textContent = 'Link copied to clipboard.';
+        idle.classList.add('hidden');
+        done.classList.remove('hidden');
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+          idle.classList.remove('hidden');
+          done.classList.add('hidden');
+          status.textContent = '';
+        }, 2000);
+      } catch {
+        status.textContent = 'Could not copy the link.';
+      }
+    });
+  }
+</script>

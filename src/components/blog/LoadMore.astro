@@ -1,0 +1,74 @@
+---
+import { Icon } from 'astro-icon/components';
+
+interface Props {
+  listId: string;
+  next?: string;
+}
+
+const { listId, next } = Astro.props;
+// A real link to the next page, so pagination still works without JS
+---
+
+<div class="mt-10 flex justify-center">
+  {next && (
+    <a
+      href={next}
+      data-load-more={listId}
+      class="border-border bg-surface text-fg hover:border-primary hover:text-primary inline-flex min-h-11 items-center gap-2 rounded-lg border px-5 font-medium transition-colors aria-disabled:pointer-events-none aria-disabled:opacity-60"
+    >
+      <span data-load-more-label>Load more posts</span>
+      <Icon name="ph:arrow-down" class="size-5" aria-hidden="true" />
+    </a>
+  )}
+  <p class="sr-only" aria-live="polite" data-load-more-status></p>
+</div>
+
+<script>
+  for (const link of document.querySelectorAll<HTMLAnchorElement>(
+    'a[data-load-more]',
+  )) {
+    const listId = link.dataset.loadMore ?? '';
+    const list = document.getElementById(listId);
+    const label = link.querySelector('[data-load-more-label]');
+    const status = link.parentElement?.querySelector('[data-load-more-status]');
+    if (!list || !label || !status) continue;
+
+    link.addEventListener('click', async (event) => {
+      event.preventDefault();
+      link.setAttribute('aria-disabled', 'true');
+      label.textContent = 'Loading…';
+
+      try {
+        const response = await fetch(link.href);
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const page = new DOMParser().parseFromString(
+          await response.text(),
+          'text/html',
+        );
+        const items = [...page.querySelectorAll(`#${listId} > li`)].map(
+          (item) => document.importNode(item, true),
+        );
+        list.append(...items);
+
+        const next = page
+          .querySelector(`a[data-load-more="${listId}"]`)
+          ?.getAttribute('href');
+        if (next) {
+          link.href = next;
+          link.removeAttribute('aria-disabled');
+          label.textContent = 'Load more posts';
+        } else {
+          link.remove();
+        }
+
+        status.textContent = `Loaded ${items.length} more ${items.length === 1 ? 'post' : 'posts'}.`;
+        // Move focus to the first new post so keyboard users continue from there
+        items[0]?.querySelector<HTMLAnchorElement>('h2 a, h3 a')?.focus();
+      } catch {
+        // Fall back to a regular page load
+        window.location.href = link.href;
+      }
+    });
+  }
+</script>

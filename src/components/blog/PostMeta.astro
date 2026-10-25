@@ -1,0 +1,20 @@
+---
+import { formatDate, readingTime, type Post } from '../../lib/blog';
+
+interface Props {
+  post: Post;
+  month?: 'long' | 'short';
+  class?: string;
+}
+
+const { post, month = 'long', class: className } = Astro.props;
+const { publishedDate } = post.data;
+---
+
+<p class:list={['text-fg-muted flex flex-wrap gap-x-2 text-sm', className]}>
+  <time datetime={publishedDate.toISOString()}>
+    {formatDate(publishedDate, month)}
+  </time>
+  <span aria-hidden="true">&middot;</span>
+  <span>{readingTime(post)} min read</span>
+</p>

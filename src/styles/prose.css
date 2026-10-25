@@ -1,0 +1,299 @@
+/*
+ * Long-form article typography for blog posts, modeled on a printed magazine
+ * page. Only imported by the post route, so other pages don't pay for it.
+ */
+@import '@fontsource-variable/fraunces/wght-italic.css';
+@import '@fontsource-variable/plus-jakarta-sans/wght-italic.css';
+
+.prose {
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  color: var(--color-fg);
+  text-wrap: pretty;
+  hanging-punctuation: first;
+  overflow-wrap: break-word;
+}
+
+@media (min-width: 48rem) {
+  .prose {
+    font-size: var(--text-lg);
+  }
+}
+
+/* Vertical rhythm: space flows between siblings rather than around each element */
+.prose > * + * {
+  margin-top: 1.5em;
+}
+
+.prose :is(p, li) {
+  hyphens: auto;
+}
+
+/* Headings */
+
+.prose :is(h2, h3, h4) {
+  font-family: var(--font-serif);
+  color: var(--color-fg);
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  hyphens: manual;
+  scroll-margin-top: 6rem;
+}
+
+.prose h2 {
+  margin-top: 1.5em;
+  font-size: var(--text-3xl);
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.prose h3 {
+  margin-top: 1.35em;
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.prose h4 {
+  margin-top: 1.25em;
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.prose :is(h2, h3, h4) + * {
+  margin-top: 0.75em;
+}
+
+.prose > :first-child {
+  margin-top: 0;
+}
+
+/* Drop cap on an opening paragraph */
+.prose > p:first-child::first-letter {
+  float: left;
+  margin: 0.08em 0.12em 0 0;
+  font-family: var(--font-serif);
+  font-size: 3.6em;
+  font-weight: 600;
+  line-height: 0.8;
+  color: var(--color-primary);
+}
+
+@supports (initial-letter: 3) or (-webkit-initial-letter: 3) {
+  .prose > p:first-child::first-letter {
+    float: none;
+    margin: 0 0.12em 0 0;
+    font-size: inherit;
+    line-height: inherit;
+    -webkit-initial-letter: 3;
+    initial-letter: 3;
+  }
+}
+
+/* Inline text */
+
+.prose a {
+  color: var(--color-primary);
+  font-weight: 500;
+  text-decoration-line: underline;
+  text-decoration-thickness: 1px;
+  text-decoration-color: color-mix(in oklab, currentColor 45%, transparent);
+  text-underline-offset: 0.2em;
+  transition:
+    color 150ms,
+    text-decoration-color 150ms;
+}
+
+.prose a:hover {
+  color: var(--color-primary-hover);
+  text-decoration-color: currentColor;
+}
+
+.prose strong {
+  font-weight: 700;
+}
+
+.prose :not(pre) > code {
+  padding: 0.1em 0.35em;
+  border: 1px solid var(--color-border);
+  border-radius: 0.3em;
+  background: var(--color-surface-raised);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
+  hyphens: none;
+  overflow-wrap: anywhere;
+}
+
+.prose a code {
+  color: inherit;
+}
+
+/* Lists */
+
+.prose :is(ul, ol) {
+  padding-left: 1.5em;
+}
+
+.prose ul {
+  list-style: disc;
+}
+
+.prose ol {
+  list-style: decimal;
+}
+
+.prose li::marker {
+  color: var(--color-primary);
+}
+
+.prose ol > li::marker {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+}
+
+.prose li {
+  padding-left: 0.25em;
+}
+
+.prose li + li,
+.prose li > * + * {
+  margin-top: 0.5em;
+}
+
+/* Pull-quote style blockquotes */
+
+.prose blockquote {
+  padding-left: 1.25em;
+  border-left: 3px solid var(--color-primary);
+  font-family: var(--font-serif);
+  font-size: 1.15em;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+.prose blockquote > * + * {
+  margin-top: 1em;
+}
+
+/* Code blocks: Shiki emits both themes as variables (see astro.config.mjs) */
+
+.prose pre {
+  position: relative;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+  background: var(--color-surface);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  line-height: 1.7;
+  tab-size: 2;
+  overflow-x: auto;
+  hyphens: none;
+}
+
+.prose pre[data-language]:not([data-language='plaintext']) {
+  padding-top: 2.5rem;
+}
+
+.prose pre[data-language]:not([data-language='plaintext'])::before {
+  content: attr(data-language);
+  position: absolute;
+  top: 0.75rem;
+  left: 1.5rem;
+  color: var(--color-fg-muted);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.prose .astro-code,
+.prose .astro-code span {
+  color: var(--shiki-light);
+}
+
+.dark .prose .astro-code,
+.dark .prose .astro-code span {
+  color: var(--shiki-dark);
+}
+
+/* Figures: images and embeds may run wider than the text column */
+
+.prose > p:has(> img:only-child),
+.prose > figure {
+  margin-block: 2.5em;
+  margin-inline: calc(50% - min(50vw - 1rem, 28rem));
+}
+
+.prose img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+}
+
+.prose figure.embed iframe {
+  display: block;
+  width: 100%;
+  height: 26rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.75rem;
+}
+
+.prose figcaption {
+  margin-top: 0.75em;
+  color: var(--color-fg-muted);
+  font-size: var(--text-sm);
+  text-align: center;
+}
+
+/* Tables: booktabs-style rules rather than a boxed grid */
+
+.prose table {
+  width: 100%;
+  border-collapse: collapse;
+  border-block: 2px solid var(--color-fg);
+  font-size: 0.9375em;
+  font-variant-numeric: tabular-nums;
+}
+
+.prose thead {
+  border-bottom: 1px solid var(--color-fg);
+}
+
+.prose :is(th, td) {
+  padding: 0.6em 0.75em;
+  text-align: left;
+}
+
+.prose tbody tr + tr {
+  border-top: 1px solid var(--color-border);
+}
+
+/* Section break */
+
+.prose hr {
+  margin-block: 3em;
+  border: 0;
+  color: var(--color-fg-muted);
+  font-family: var(--font-serif);
+  text-align: center;
+}
+
+.prose hr::before {
+  content: '\2217\2003\2217\2003\2217';
+}
+
+/* End mark after the final paragraph, as in print */
+.prose > p:last-child::after {
+  content: '';
+  display: inline-block;
+  width: 0.55em;
+  height: 0.55em;
+  margin-left: 0.4em;
+  background: var(--color-primary);
+}

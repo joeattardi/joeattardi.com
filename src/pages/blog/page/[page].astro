@@ -1,0 +1,49 @@
+---
+import type { GetStaticPaths, Page } from 'astro';
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import PageHeader from '../../../components/PageHeader.astro';
+import PostArchive from '../../../components/blog/PostArchive.astro';
+import {
+  FEATURED_COUNT,
+  PAGE_SIZE,
+  getPosts,
+  type Post,
+} from '../../../lib/blog';
+
+// Page 1 of the archive is rendered by /blog itself, below the featured posts
+export const getStaticPaths = (async ({ paginate }) => {
+  const older = (await getPosts()).slice(FEATURED_COUNT);
+  return paginate(older, { pageSize: PAGE_SIZE }).filter(
+    ({ props }) => props.page.currentPage > 1,
+  );
+}) satisfies GetStaticPaths;
+
+interface Props {
+  page: Page<Post>;
+}
+
+const { page } = Astro.props;
+const newer =
+  page.currentPage === 2 ? '/blog' : `/blog/page/${page.currentPage - 1}`;
+---
+
+<BaseLayout
+  title={`Blog, page ${page.currentPage}`}
+  description={`Earlier posts from Joe Attardi's blog, page ${page.currentPage} of ${page.lastPage}.`}
+>
+  <PageHeader
+    title="Earlier posts"
+    intro={`Page ${page.currentPage} of ${page.lastPage}`}
+  />
+  <div class="mx-auto max-w-content px-4 pb-16 sm:px-6">
+    <a
+      href={newer}
+      class="text-primary hover:text-primary-hover mb-6 inline-flex min-h-11 items-center gap-2 font-medium"
+    >
+      <Icon name="ph:arrow-left" class="size-5" aria-hidden="true" />
+      Newer posts
+    </a>
+    <PostArchive posts={page.data} next={page.url.next} headingLevel={2} />
+  </div>
+</BaseLayout>

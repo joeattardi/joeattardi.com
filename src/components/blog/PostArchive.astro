@@ -1,0 +1,24 @@
+---
+import type { Post } from '../../lib/blog';
+import PostRow from './PostRow.astro';
+import LoadMore from './LoadMore.astro';
+
+interface Props {
+  posts: Post[];
+  /** URL of the next page of this list, if there is one */
+  next?: string;
+  headingLevel?: 2 | 3;
+}
+
+const { posts, next, headingLevel } = Astro.props;
+// LoadMore looks the list up by this id in the fetched next page, so it must
+// be the same on every page of a given archive
+const id = 'post-archive';
+---
+
+<ul id={id} class="grid gap-x-8 md:grid-cols-[auto_1fr]">
+  {posts.map((post) => (
+    <PostRow post={post} headingLevel={headingLevel} />
+  ))}
+</ul>
+<LoadMore listId={id} next={next} />

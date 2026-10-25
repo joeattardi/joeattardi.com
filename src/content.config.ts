@@ -50,4 +50,22 @@ const projects = defineCollection({
     }),
 });
 
-export const collections = { books, articles, projects };
+const blog = defineCollection({
+  loader: glob({ pattern: '**/index.md', base: './src/content/blog' }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      // Optional deck shown under the title on the post page
+      subtitle: z.string().optional(),
+      summary: z.string(),
+      publishedDate: z.coerce.date(),
+      updatedDate: z.coerce.date().optional(),
+      cover: image().optional(),
+      // Covers are decorative by default; set this when one carries meaning
+      coverAlt: z.string().default(''),
+      tags: z.array(z.string()).default([]),
+      draft: z.boolean().default(false),
+    }),
+});
+
+export const collections = { books, articles, projects, blog };

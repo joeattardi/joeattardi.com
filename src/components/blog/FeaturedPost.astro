@@ -1,0 +1,71 @@
+---
+import { Image } from 'astro:assets';
+import { coverClass, type Post } from '../../lib/blog';
+import PostMeta from './PostMeta.astro';
+import TagList from './TagList.astro';
+import PostTitle from './PostTitle.astro';
+
+interface Props {
+  post: Post;
+  /** The lead story gets a larger image, title and the subtitle */
+  lead?: boolean;
+}
+
+const { post, lead = false } = Astro.props;
+const { title, subtitle, summary, cover, coverAlt, tags } = post.data;
+---
+
+<article
+  class:list={[
+    'group bg-surface border-border hover:border-primary relative flex flex-col overflow-hidden rounded-2xl border transition-[border-color,box-shadow] duration-300 hover:shadow-lg',
+    lead && 'md:col-span-2 lg:row-span-2',
+  ]}
+>
+  {cover && (
+    <div class="border-border overflow-hidden border-b">
+      <Image
+        src={cover}
+        alt={coverAlt}
+        widths={lead ? [480, 800, 1200, 1600] : [400, 640, 800]}
+        sizes={
+          lead
+            ? '(min-width: 72rem) 46rem, (min-width: 64rem) 66vw, 100vw'
+            : '(min-width: 72rem) 23rem, (min-width: 64rem) 33vw, (min-width: 48rem) 50vw, 100vw'
+        }
+        loading={lead ? 'eager' : 'lazy'}
+        fetchpriority={lead ? 'high' : undefined}
+        class:list={[
+          coverClass,
+          'transition-transform duration-500 ease-out motion-safe:group-hover:scale-105',
+        ]}
+      />
+    </div>
+  )}
+  <div class:list={['flex flex-1 flex-col', lead ? 'p-6 sm:p-8' : 'p-5']}>
+    {lead && (
+      <p class="text-accent font-mono text-sm font-medium tracking-wide uppercase">
+        Latest post
+      </p>
+    )}
+    <h2
+      class:list={[
+        'font-bold tracking-tight text-balance',
+        lead ? 'mt-2 text-4xl' : 'text-2xl',
+      ]}
+    >
+      <a
+        href={`/blog/${post.id}`}
+        class="group-hover:text-primary transition-colors after:absolute after:inset-0 after:content-['']"
+      >
+        <PostTitle title={title} />
+      </a>
+    </h2>
+    <p class:list={['text-fg-muted', lead ? 'mt-4 text-lg' : 'mt-2']}>
+      {lead ? (subtitle ?? summary) : summary}
+    </p>
+    <div class="mt-auto pt-5">
+      <PostMeta post={post} />
+      <TagList tags={tags} class="mt-4" />
+    </div>
+  </div>
+</article>
