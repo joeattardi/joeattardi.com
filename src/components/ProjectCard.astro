@@ -11,40 +11,56 @@ interface Props {
 const { project } = Astro.props;
 const { title, summary, tech, repoUrl, demoUrl, image, imageAlt } =
   project.data;
+// The title links to the live project; the source link is shown separately
+// only when there is also a demo to point the title at
+const href = demoUrl ?? repoUrl;
 const linkClass =
   'text-primary hover:text-primary-hover inline-flex min-h-11 items-center gap-2 font-medium transition-colors';
 ---
 
-<article class="bg-surface border-border flex flex-col overflow-hidden rounded-xl border">
+<article class="group bg-surface border-border flex flex-col overflow-hidden rounded-xl border">
   {image && (
-    <Image
-      src={image}
-      alt={imageAlt ?? ''}
-      width={800}
-      class="aspect-video w-full object-cover"
-    />
+    <div class="overflow-hidden">
+      <Image
+        src={image}
+        alt={imageAlt ?? ''}
+        width={800}
+        class="aspect-video w-full object-cover object-top transition-transform duration-500 ease-out motion-safe:group-hover:scale-105"
+      />
+    </div>
   )}
   <div class="flex flex-1 flex-col p-5">
-    <h3 class="text-xl font-semibold tracking-tight">{title}</h3>
+    <h3 class="text-xl font-semibold tracking-tight">
+      {href ? (
+        <a
+          href={href}
+          rel="noopener"
+          class="hover:text-primary inline-flex items-start gap-2 transition-colors"
+        >
+          {title}
+          <Icon
+            name="ph:arrow-up-right"
+            class="mt-1 size-5 shrink-0"
+            aria-hidden="true"
+          />
+        </a>
+      ) : (
+        title
+      )}
+    </h3>
     <p class="text-fg-muted mt-2">{summary}</p>
     <ul class="mt-4 flex flex-wrap gap-2" aria-label="Technologies">
       {tech.map((t) => (
         <Tag>{t}</Tag>
       ))}
     </ul>
-    <div class="mt-auto flex flex-wrap gap-x-5 pt-4">
-      {repoUrl && (
+    {repoUrl && demoUrl && (
+      <div class="mt-auto pt-4">
         <a href={repoUrl} class={linkClass}>
           <Icon name="fa6-brands:github" class="size-5" aria-hidden="true" />
           Source<span class="sr-only"> for {title}</span>
         </a>
-      )}
-      {demoUrl && (
-        <a href={demoUrl} class={linkClass}>
-          <Icon name="ph:arrow-square-out" class="size-5" aria-hidden="true" />
-          Live demo<span class="sr-only"> of {title}</span>
-        </a>
-      )}
-    </div>
+      </div>
+    )}
   </div>
 </article>
