@@ -1,8 +1,8 @@
 export const site = {
   name: 'Joe Attardi',
-  title: 'Joe Attardi | Senior Frontend Engineer & Author',
+  title: 'Joe Attardi | Software Engineer & Author',
   description:
-    'Joe Attardi is a senior frontend engineer and published author of books with Apress and O’Reilly.',
+    'Joe Attardi is a software engineer and published author of books with Apress and O’Reilly.',
   url: 'https://joeattardi.com',
   email: 'jattardi@gmail.com',
 };

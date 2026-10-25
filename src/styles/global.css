@@ -168,6 +168,28 @@
   }
 }
 
+/* Landing page sections fade in as they scroll into view; no JS, and unsupported browsers just show them */
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .reveal {
+      animation: reveal linear both;
+    }
+    /* Separate selector so the minifier can't fold view() into the animation shorthand, which older browsers reject */
+    div.reveal {
+      animation-timeline: view();
+      animation-range: entry 0% entry 70%;
+    }
+  }
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+    translate: 0 4rem;
+    scale: 0.96;
+  }
+}
+
 @layer base {
   html {
     color-scheme: light;
