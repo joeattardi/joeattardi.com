@@ -6,8 +6,8 @@ import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import satori from 'satori';
 import { Resvg } from '@resvg/resvg-js';
-import { titleSegments } from './blog';
-import { site } from '../data/site';
+import { titleSegments } from '../src/lib/blog';
+import { site } from '../src/data/site';
 
 const WIDTH = 1200;
 const HEIGHT = 630;

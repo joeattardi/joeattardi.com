@@ -11,6 +11,7 @@
     "lint": "eslint .",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "og": "node scripts/generate-og.mjs",
     "lighthouse": "npm run build && lhci autorun"
   },
   "dependencies": {
