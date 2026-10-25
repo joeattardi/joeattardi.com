@@ -10,7 +10,7 @@ Personal developer portfolio site for Joe, a senior frontend engineer and publis
 - **Content:** Astro content collections with Zod schemas
 - **Hosting:** Cloudflare Pages (static). SSR is NOT set up yet. If a route ever needs server code, add the `@astrojs/cloudflare` adapter and opt that single route out with `export const prerender = false`. Ask before doing this.
 - **Package manager:** npm only. Never use yarn, pnpm, or bun. Commit `package-lock.json`.
-- **Fonts:** Fontsource, self-hosted via npm. Inter Variable (`@fontsource-variable/inter`) for UI and headings, JetBrains Mono Variable (`@fontsource-variable/jetbrains-mono`) for code. No Google Fonts CDN links.
+- **Fonts:** Fontsource, self-hosted via npm. Plus Jakarta Sans Variable (`@fontsource-variable/plus-jakarta-sans`) for UI and body, Fraunces Variable (`@fontsource-variable/fraunces`) for headings, JetBrains Mono Variable (`@fontsource-variable/jetbrains-mono`) for code. No Google Fonts CDN links.
 - **Icons:** `astro-icon` with Iconify sets. `@iconify-json/ph` (Phosphor) for general icons, `@iconify-json/fa6-brands` (Font Awesome brands) for GitHub, LinkedIn, etc. Icons render as inline SVG, so no icon fonts and no client JS.
 
 ## Commands
@@ -138,7 +138,7 @@ All text/background pairings must meet **WCAG AA** contrast (4.5:1 body, 3:1 lar
 
 ### Typography
 
-- Inter Variable for UI and headings, JetBrains Mono Variable for code.
+- Plus Jakarta Sans Variable for UI and body, Fraunces Variable for headings, JetBrains Mono Variable for code.
 - Define a type scale in `@theme`; use fluid sizes (`clamp()`) for large headings.
 - Body text 16px minimum, line length capped around 65-75 characters for prose.
 

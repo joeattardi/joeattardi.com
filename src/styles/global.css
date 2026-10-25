@@ -1,5 +1,6 @@
 @import 'tailwindcss';
-@import '@fontsource-variable/inter';
+@import '@fontsource-variable/plus-jakarta-sans';
+@import '@fontsource-variable/fraunces';
 @import '@fontsource-variable/jetbrains-mono';
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -18,7 +19,9 @@
   /* Darkened from the starting palette so it passes 4.5:1 as text on light surfaces */
   --color-accent: #0369a1;
 
-  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans:
+    'Plus Jakarta Sans Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Fraunces Variable', ui-serif, Georgia, serif;
   --font-mono: 'JetBrains Mono Variable', ui-monospace, monospace;
 
   /* Type scale: fluid for large headings */
@@ -58,6 +61,14 @@
   }
   body {
     @apply bg-bg font-sans text-fg antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif;
   }
   :focus-visible {
     @apply outline-2 outline-offset-2 outline-primary;
