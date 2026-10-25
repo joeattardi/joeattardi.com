@@ -12,7 +12,8 @@ const books = defineCollection({
       cover: image(),
       coverAlt: z.string(),
       summary: z.string(),
-      purchaseUrl: z.url(),
+      amazonUrl: z.url(),
+      purchaseUrl: z.url().optional(),
       featured: z.boolean().default(false),
     }),
 });

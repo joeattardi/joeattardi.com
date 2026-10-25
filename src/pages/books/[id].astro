@@ -17,6 +17,7 @@ const {
   cover,
   coverAlt,
   summary,
+  amazonUrl,
   purchaseUrl,
 } = book.data;
 const { Content } = await render(book);
@@ -53,14 +54,30 @@ const { Content } = await render(book);
         <div class="mt-6 max-w-prose space-y-4">
           <Content />
         </div>
-        <a
-          href={purchaseUrl}
-          rel="noopener"
-          class="bg-primary text-primary-fg hover:bg-primary-hover mt-8 inline-flex min-h-11 items-center gap-2 rounded-md px-5 font-medium transition-colors"
-        >
-          Buy from {publisher}
-          <Icon name="ph:arrow-up-right" class="size-5" aria-hidden="true" />
-        </a>
+        <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2">
+          <a
+            href={amazonUrl}
+            rel="noopener"
+            class="bg-primary text-primary-fg hover:bg-primary-hover inline-flex min-h-11 items-center gap-2 rounded-md px-5 font-medium transition-colors"
+          >
+            Buy on Amazon
+            <Icon name="ph:arrow-up-right" class="size-5" aria-hidden="true" />
+          </a>
+          {purchaseUrl && (
+            <a
+              href={purchaseUrl}
+              rel="noopener"
+              class="text-primary hover:text-primary-hover inline-flex min-h-11 items-center gap-2 font-medium transition-colors"
+            >
+              Also at {publisher}
+              <Icon
+                name="ph:arrow-up-right"
+                class="size-5"
+                aria-hidden="true"
+              />
+            </a>
+          )}
+        </div>
       </div>
     </div>
   </article>

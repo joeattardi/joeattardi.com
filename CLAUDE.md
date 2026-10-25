@@ -172,6 +172,7 @@ All text/background pairings must meet **WCAG AA** contrast (4.5:1 body, 3:1 lar
 
 ## Never do
 
+- Never run the dev server automatically. I will start and stop it on my own.
 - Never commit or push without asking.
 - Never introduce SSR, an adapter, or server routes without asking.
 - Never use raw hex or default Tailwind palette colors in components.
