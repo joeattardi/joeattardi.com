@@ -19,6 +19,7 @@ const {
   summary,
   amazonUrl,
   purchaseUrl,
+  toc,
 } = book.data;
 const { Content } = await render(book);
 ---
@@ -37,7 +38,7 @@ const { Content } = await render(book);
         src={cover}
         alt={coverAlt}
         width={480}
-        class="border-border aspect-[3/4] w-48 rounded-md border object-cover md:w-full"
+        class="border-border aspect-[3/4] w-48 rounded-md border -rotate-2 object-cover md:w-full motion-safe:animate-cover-reveal"
       />
       <div>
         <p class="text-fg-muted text-sm">
@@ -80,5 +81,31 @@ const { Content } = await render(book);
         </div>
       </div>
     </div>
+    {toc.length > 0 && (
+      <section class="mt-14 md:mt-20" aria-labelledby="toc-heading">
+        <h2 id="toc-heading" class="text-3xl font-bold tracking-tight">
+          Table of contents
+        </h2>
+        <ol class="border-border mt-6 max-w-prose divide-y border-y divide-border">
+          {toc.map((entry, i) => (
+            <li class="grid grid-cols-[2.5rem_1fr] gap-x-2 py-4">
+              <span
+                class="text-accent font-mono text-sm leading-7"
+                aria-hidden="true"
+              >
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <div>
+                <h3 class="text-lg font-semibold">
+                  <span class="sr-only">Chapter {i + 1}: </span>
+                  {entry.title}
+                </h3>
+                <p class="text-fg-muted mt-1">{entry.description}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
+      </section>
+    )}
   </article>
 </BaseLayout>

@@ -36,6 +36,17 @@
 
   --container-content: 72rem;
   --container-prose: 44rem;
+
+  --animate-cover-reveal: cover-reveal 700ms ease-out both;
+
+  /* Animates from this state to the element's own resting opacity, rotation and scale */
+  @keyframes cover-reveal {
+    from {
+      opacity: 0;
+      rotate: 0deg;
+      scale: 0.97;
+    }
+  }
 }
 
 .dark {
