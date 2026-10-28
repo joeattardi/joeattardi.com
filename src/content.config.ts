@@ -46,6 +46,9 @@ const projects = defineCollection({
       image: image().optional(),
       imageAlt: z.string().optional(),
       featured: z.boolean().default(false),
+      // When true, the markdown body is rendered at /projects/<id> and the
+      // project card links there instead of out to the demo or repo
+      page: z.boolean().default(false),
       order: z.number(),
     }),
 });
