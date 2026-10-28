@@ -1,0 +1,75 @@
+{
+  "main": {
+    "headline": "Principal Software Engineer & O’Reilly author",
+    "summary": "Principal Software Engineer and O'Reilly author with over two decades of experience, specializing in modern front-end development (React, TypeScript, JavaScript) and robust full-stack solutions (Java, Node.js). Proven record of delivering high-impact projects that increase customer retention and engineer productivity.",
+    "education": [
+      {
+        "school": "University of Massachusetts Lowell",
+        "degree": "B.S., Computer Science",
+        "start": "2000",
+        "end": "2004",
+        "honors": "summa cum laude"
+      }
+    ],
+    "skills": [
+      {
+        "label": "Languages",
+        "items": ["TypeScript", "JavaScript", "HTML", "CSS", "Java"]
+      },
+      {
+        "label": "Technologies",
+        "items": [
+          "React",
+          "Astro",
+          "Svelte",
+          "Angular",
+          "Backbone",
+          "jQuery",
+          "Node.js",
+          "Spring",
+          "Web Components",
+          "Sass",
+          "Webpack",
+          "Vite",
+          "Tailwind CSS"
+        ]
+      },
+      {
+        "label": "Other",
+        "items": [
+          "Git",
+          "HTTP/REST API design",
+          "GraphQL",
+          "GitHub Copilot",
+          "Claude Code"
+        ]
+      }
+    ],
+    "publications": [
+      {
+        "kind": "Book",
+        "title": "Web API Cookbook",
+        "publisher": "O’Reilly",
+        "year": "2024"
+      },
+      {
+        "kind": "Book",
+        "title": "Modern CSS",
+        "publisher": "Apress",
+        "year": "2025"
+      },
+      {
+        "kind": "Book",
+        "title": "Using Gatsby and Netlify CMS",
+        "publisher": "Apress",
+        "year": "2020"
+      },
+      {
+        "kind": "Course",
+        "title": "Building an AI Voice Assistant",
+        "publisher": "Manning",
+        "year": "2025"
+      }
+    ]
+  }
+}

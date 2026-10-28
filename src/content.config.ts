@@ -1,5 +1,5 @@
 import { defineCollection } from 'astro:content';
-import { glob } from 'astro/loaders';
+import { file, glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
 const books = defineCollection({
@@ -71,4 +71,50 @@ const blog = defineCollection({
     }),
 });
 
-export const collections = { books, articles, projects, blog };
+const jobs = defineCollection({
+  loader: file('./src/content/resume/jobs.json'),
+  schema: z.object({
+    order: z.number(),
+    company: z.string(),
+    location: z.string(),
+    // Newest first; a company can list several promotions
+    roles: z.array(
+      z.object({
+        title: z.string(),
+        start: z.string(),
+        end: z.string(),
+      }),
+    ),
+    highlights: z.array(z.string()),
+  }),
+});
+
+const resume = defineCollection({
+  loader: file('./src/content/resume/resume.json'),
+  schema: z.object({
+    headline: z.string(),
+    summary: z.string(),
+    education: z.array(
+      z.object({
+        school: z.string(),
+        degree: z.string(),
+        start: z.string(),
+        end: z.string(),
+        honors: z.string().optional(),
+      }),
+    ),
+    skills: z.array(
+      z.object({ label: z.string(), items: z.array(z.string()) }),
+    ),
+    publications: z.array(
+      z.object({
+        kind: z.string(),
+        title: z.string(),
+        publisher: z.string(),
+        year: z.string(),
+      }),
+    ),
+  }),
+});
+
+export const collections = { books, articles, projects, blog, jobs, resume };

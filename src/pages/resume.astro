@@ -1,0 +1,149 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Tag from '../components/Tag.astro';
+import { socials } from '../data/site';
+
+const resume = (await getEntry('resume', 'main'))!.data;
+const jobs = (await getCollection('jobs')).sort(
+  (a, b) => a.data.order - b.data.order,
+);
+const links = socials.filter((s) => s.label !== 'X');
+---
+
+<BaseLayout
+  title="Resume"
+  description="Résumé of Joe Attardi: Principal Software Engineer and O’Reilly author with over two decades of front-end and full-stack experience."
+>
+  <PageHeader title="Resume" intro={resume.headline} />
+
+  <div class="mx-auto grid max-w-content gap-12 px-4 pb-16 sm:px-6 lg:grid-cols-[18rem_1fr] lg:gap-16">
+    <aside class="space-y-10 lg:sticky lg:top-24 lg:self-start">
+      <section aria-labelledby="summary-heading">
+        <h2 id="summary-heading" class="text-2xl font-bold tracking-tight">
+          Summary
+        </h2>
+        <p class="text-fg-muted mt-3 leading-relaxed">{resume.summary}</p>
+        <ul class="mt-4 flex flex-wrap gap-x-4">
+          {links.map((s) => (
+            <li>
+              <a
+                href={s.href}
+                class="text-primary hover:text-primary-hover inline-flex min-h-11 items-center gap-2 font-medium transition-colors"
+              >
+                <Icon name={s.icon} class="size-5" aria-hidden="true" />
+                {s.label}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      <section aria-labelledby="skills-heading">
+        <h2 id="skills-heading" class="text-2xl font-bold tracking-tight">
+          Skills
+        </h2>
+        <div class="mt-4 space-y-5">
+          {resume.skills.map((group) => (
+            <div>
+              <h3 class="text-fg-muted text-sm font-semibold tracking-wide uppercase">
+                {group.label}
+              </h3>
+              <ul class="mt-2 flex flex-wrap gap-2">
+                {group.items.map((item) => (
+                  <Tag>{item}</Tag>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section aria-labelledby="education-heading">
+        <h2 id="education-heading" class="text-2xl font-bold tracking-tight">
+          Education
+        </h2>
+        <ul class="mt-4 space-y-4">
+          {resume.education.map((e) => (
+            <li>
+              <p class="font-semibold">{e.school}</p>
+              <p class="text-fg-muted">
+                {e.degree}
+                {e.honors && `, ${e.honors}`}
+              </p>
+              <p class="text-fg-muted text-sm">
+                {e.start} – {e.end}
+              </p>
+            </li>
+          ))}
+        </ul>
+      </section>
+    </aside>
+
+    <div class="space-y-12">
+      <section aria-labelledby="experience-heading">
+        <h2 id="experience-heading" class="text-3xl font-bold tracking-tight">
+          Experience
+        </h2>
+        <ol class="border-border mt-8 space-y-8 border-l">
+          {jobs.map(({ data: job }) => (
+            <li class="relative pl-6 sm:pl-8">
+              <span
+                class="bg-primary border-bg absolute top-2 -left-[0.4375rem] size-3.5 rounded-full border-2"
+                aria-hidden="true"
+              />
+              <article class="bg-surface border-border rounded-xl border p-5 sm:p-6">
+                <header>
+                  <h3 class="text-2xl font-bold tracking-tight">
+                    {job.company}
+                  </h3>
+                  <p class="text-fg-muted text-sm">{job.location}</p>
+                  <ul class="mt-3 space-y-1">
+                    {job.roles.map((role) => (
+                      <li class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between sm:gap-4">
+                        <span class="font-semibold">{role.title}</span>
+                        <span class="text-accent font-mono text-sm">
+                          {role.start} – {role.end}
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                </header>
+                <ul class="text-fg-muted marker:text-primary mt-4 list-disc space-y-2 pl-5 leading-relaxed">
+                  {job.highlights.map((h) => (
+                    <li>{h}</li>
+                  ))}
+                </ul>
+              </article>
+            </li>
+          ))}
+        </ol>
+      </section>
+
+      <section aria-labelledby="publications-heading">
+        <h2 id="publications-heading" class="text-3xl font-bold tracking-tight">
+          Publications
+        </h2>
+        <ul class="mt-6 grid gap-4 sm:grid-cols-2">
+          {resume.publications.map((p) => (
+            <li class="bg-surface border-border rounded-xl border p-5">
+              <p class="text-accent font-mono text-sm">
+                {p.kind} · {p.year}
+              </p>
+              <p class="mt-1 font-serif text-xl font-semibold">{p.title}</p>
+              <p class="text-fg-muted">{p.publisher}</p>
+            </li>
+          ))}
+        </ul>
+        <a
+          href="/books"
+          class="text-primary hover:text-primary-hover mt-4 inline-flex min-h-11 items-center font-medium transition-colors"
+        >
+          More about my books
+        </a>
+      </section>
+    </div>
+  </div>
+</BaseLayout>
