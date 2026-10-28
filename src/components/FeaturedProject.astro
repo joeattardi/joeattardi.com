@@ -10,9 +10,10 @@ interface Props {
 }
 
 const { project, label = 'Latest project' } = Astro.props;
-const { title, summary, tech, repoUrl, demoUrl, image, imageAlt } =
+const { title, summary, tech, repoUrl, demoUrl, image, imageAlt, page } =
   project.data;
-const href = demoUrl ?? repoUrl;
+const href = page ? `/projects/${project.id}` : (demoUrl ?? repoUrl);
+const showSource = repoUrl && (page || demoUrl);
 ---
 
 <article class="group bg-surface border-border grid overflow-hidden rounded-2xl border lg:grid-cols-5">
@@ -44,14 +45,18 @@ const href = demoUrl ?? repoUrl;
       <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
         <a
           href={href}
-          rel="noopener"
+          rel={page ? undefined : 'noopener'}
           class="bg-primary text-primary-fg hover:bg-primary-hover inline-flex min-h-11 items-center gap-2 rounded-lg px-5 font-medium transition-colors"
         >
-          {demoUrl ? 'Visit' : 'View source'}
+          {page ? 'Learn more' : demoUrl ? 'Visit' : 'View source'}
           <span class="sr-only"> {title}</span>
-          <Icon name="ph:arrow-up-right" class="size-5" aria-hidden="true" />
+          <Icon
+            name={page ? 'ph:arrow-right' : 'ph:arrow-up-right'}
+            class="size-5"
+            aria-hidden="true"
+          />
         </a>
-        {repoUrl && demoUrl && (
+        {showSource && (
           <a
             href={repoUrl}
             class="text-primary hover:text-primary-hover inline-flex min-h-11 items-center gap-2 font-medium transition-colors"

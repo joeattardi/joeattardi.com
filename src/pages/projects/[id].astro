@@ -1,0 +1,89 @@
+---
+import { getCollection, render } from 'astro:content';
+import { Image } from 'astro:assets';
+import { Icon } from 'astro-icon/components';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Tag from '../../components/Tag.astro';
+import '../../styles/prose.css';
+
+export async function getStaticPaths() {
+  const projects = await getCollection('projects', (p) => p.data.page);
+  return projects.map((project) => ({
+    params: { id: project.id },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const { title, summary, tech, repoUrl, demoUrl, image, imageAlt } =
+  project.data;
+const { Content } = await render(project);
+---
+
+<BaseLayout title={title} description={summary}>
+  <article class="max-w-content mx-auto px-4 py-12 sm:px-6 md:py-16">
+    <a
+      href="/projects"
+      class="text-primary hover:text-primary-hover inline-flex min-h-11 items-center gap-2 font-medium"
+    >
+      <Icon name="ph:arrow-left" class="size-5" aria-hidden="true" />
+      All projects
+    </a>
+    <header class="mt-6 max-w-prose">
+      <h1 class="text-4xl font-bold tracking-tight">{title}</h1>
+      <p class="text-fg-muted mt-4 text-lg">{summary}</p>
+      <ul class="mt-6 flex flex-wrap gap-2" aria-label="Technologies">
+        {tech.map((t) => (
+          <Tag>{t}</Tag>
+        ))}
+      </ul>
+      {(demoUrl || repoUrl) && (
+        <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+          {demoUrl && (
+            <a
+              href={demoUrl}
+              rel="noopener"
+              class="bg-primary text-primary-fg hover:bg-primary-hover inline-flex min-h-11 items-center gap-2 rounded-lg px-5 font-medium transition-colors"
+            >
+              Visit
+              <span class="sr-only"> {title}</span>
+              <Icon
+                name="ph:arrow-up-right"
+                class="size-5"
+                aria-hidden="true"
+              />
+            </a>
+          )}
+          {repoUrl && (
+            <a
+              href={repoUrl}
+              rel="noopener"
+              class="text-primary hover:text-primary-hover inline-flex min-h-11 items-center gap-2 font-medium transition-colors"
+            >
+              <Icon
+                name="fa6-brands:github"
+                class="size-5"
+                aria-hidden="true"
+              />
+              Source<span class="sr-only"> for {title}</span>
+            </a>
+          )}
+        </div>
+      )}
+    </header>
+    {image && (
+      <Image
+        src={image}
+        alt={imageAlt ?? ''}
+        width={1200}
+        widths={[600, 900, 1200, 1600]}
+        sizes="(min-width: 1152px) 1088px, 100vw"
+        loading="eager"
+        class="border-border mt-10 aspect-video w-full rounded-2xl border object-cover object-top"
+      />
+    )}
+    <div class="prose mt-10 max-w-prose md:mt-14">
+      <Content />
+    </div>
+  </article>
+</BaseLayout>

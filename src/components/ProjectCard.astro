@@ -9,11 +9,14 @@ interface Props {
 }
 
 const { project } = Astro.props;
-const { title, summary, tech, repoUrl, demoUrl, image, imageAlt } =
+const { title, summary, tech, repoUrl, demoUrl, image, imageAlt, page } =
   project.data;
-// The title links to the live project; the source link is shown separately
-// only when there is also a demo to point the title at
-const href = demoUrl ?? repoUrl;
+// The title links to the project's own page when it has one, otherwise to the
+// live project. The source link is shown separately only when the title does
+// not already point at it.
+const external = !page;
+const href = page ? `/projects/${project.id}` : (demoUrl ?? repoUrl);
+const showSource = repoUrl && (page || demoUrl);
 const linkClass =
   'text-primary hover:text-primary-hover inline-flex min-h-11 items-center gap-2 font-medium transition-colors';
 ---
@@ -34,12 +37,12 @@ const linkClass =
       {href ? (
         <a
           href={href}
-          rel="noopener"
+          rel={external ? 'noopener' : undefined}
           class="hover:text-primary inline-flex items-start gap-2 transition-colors"
         >
           {title}
           <Icon
-            name="ph:arrow-up-right"
+            name={external ? 'ph:arrow-up-right' : 'ph:arrow-right'}
             class="mt-1 size-5 shrink-0"
             aria-hidden="true"
           />
@@ -54,7 +57,7 @@ const linkClass =
         <Tag>{t}</Tag>
       ))}
     </ul>
-    {repoUrl && demoUrl && (
+    {showSource && (
       <div class="mt-auto pt-4">
         <a href={repoUrl} class={linkClass}>
           <Icon name="fa6-brands:github" class="size-5" aria-hidden="true" />

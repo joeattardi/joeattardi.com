@@ -1,9 +1,9 @@
 ---
 import { getCollection } from 'astro:content';
-import BaseLayout from '../layouts/BaseLayout.astro';
-import PageHeader from '../components/PageHeader.astro';
-import FeaturedProject from '../components/FeaturedProject.astro';
-import ProjectCard from '../components/ProjectCard.astro';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageHeader from '../../components/PageHeader.astro';
+import FeaturedProject from '../../components/FeaturedProject.astro';
+import ProjectCard from '../../components/ProjectCard.astro';
 
 const projects = (await getCollection('projects')).sort(
   (a, b) => a.data.order - b.data.order,
