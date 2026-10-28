@@ -11,6 +11,13 @@ const jobs = (await getCollection('jobs')).sort(
   (a, b) => a.data.order - b.data.order,
 );
 const formats = [
+  {
+    label: 'PDF',
+    href: '/resume.pdf',
+    icon: 'ph:file-pdf',
+    download: 'Joe-Attardi-Resume.pdf',
+  },
+  { label: 'Markdown', href: '/resume.md', icon: 'ph:markdown-logo' },
   { label: 'Plain text', href: '/resume.txt', icon: 'ph:file-text' },
   { label: 'JSON Resume', href: '/resume.json', icon: 'ph:brackets-curly' },
 ];
@@ -43,25 +50,35 @@ const links = socials.filter((s) => s.label !== 'X');
             </li>
           ))}
         </ul>
-        <div class="mt-2 flex flex-wrap gap-3">
-          <a
-            href="/resume.pdf"
-            download="Joe-Attardi-Resume.pdf"
-            class="bg-primary text-primary-fg hover:bg-primary-hover inline-flex min-h-11 items-center gap-2 rounded-lg px-4 font-semibold transition-colors"
-          >
+        <details class="resume-menu relative mt-2 inline-block">
+          <summary class="bg-primary text-primary-fg hover:bg-primary-hover inline-flex min-h-11 cursor-pointer list-none items-center gap-2 rounded-lg px-4 font-semibold transition-colors marker:hidden [&::-webkit-details-marker]:hidden">
             <Icon name="ph:download-simple" class="size-5" aria-hidden="true" />
-            Download PDF
-          </a>
-          {formats.map((f) => (
-            <a
-              href={f.href}
-              class="border-border hover:border-primary text-fg inline-flex min-h-11 items-center gap-2 rounded-lg border px-4 font-medium transition-colors"
-            >
-              <Icon name={f.icon} class="size-5" aria-hidden="true" />
-              {f.label}
-            </a>
-          ))}
-        </div>
+            Download resume
+            <Icon
+              name="ph:caret-down"
+              class="size-4 transition-transform in-[details[open]]:rotate-180"
+              aria-hidden="true"
+            />
+          </summary>
+          <ul class="bg-surface border-border absolute left-0 z-10 mt-2 min-w-full rounded-lg border p-1 shadow-lg">
+            {formats.map((f) => (
+              <li>
+                <a
+                  href={f.href}
+                  download={f.download}
+                  class="text-fg hover:bg-surface-raised flex min-h-11 items-center gap-3 rounded-md px-3 whitespace-nowrap transition-colors"
+                >
+                  <Icon
+                    name={f.icon}
+                    class="text-primary size-5"
+                    aria-hidden="true"
+                  />
+                  {f.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </details>
       </section>
 
       <section aria-labelledby="skills-heading">
@@ -170,3 +187,18 @@ const links = socials.filter((s) => s.label !== 'X');
     </div>
   </div>
 </BaseLayout>
+
+<script>
+  // Native <details> has no light dismiss, so close the menu on outside click and Escape
+  const menu = document.querySelector<HTMLDetailsElement>('.resume-menu');
+
+  document.addEventListener('click', (e) => {
+    if (menu?.open && !menu.contains(e.target as Node)) menu.open = false;
+  });
+  menu?.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && menu.open) {
+      menu.open = false;
+      menu.querySelector('summary')?.focus();
+    }
+  });
+</script>
