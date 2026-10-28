@@ -10,6 +10,10 @@ const resume = (await getEntry('resume', 'main'))!.data;
 const jobs = (await getCollection('jobs')).sort(
   (a, b) => a.data.order - b.data.order,
 );
+const formats = [
+  { label: 'Plain text', href: '/resume.txt', icon: 'ph:file-text' },
+  { label: 'JSON Resume', href: '/resume.json', icon: 'ph:brackets-curly' },
+];
 const links = socials.filter((s) => s.label !== 'X');
 ---
 
@@ -39,6 +43,25 @@ const links = socials.filter((s) => s.label !== 'X');
             </li>
           ))}
         </ul>
+        <div class="mt-2 flex flex-wrap gap-3">
+          <a
+            href="/resume.pdf"
+            download="Joe-Attardi-Resume.pdf"
+            class="bg-primary text-primary-fg hover:bg-primary-hover inline-flex min-h-11 items-center gap-2 rounded-lg px-4 font-semibold transition-colors"
+          >
+            <Icon name="ph:download-simple" class="size-5" aria-hidden="true" />
+            Download PDF
+          </a>
+          {formats.map((f) => (
+            <a
+              href={f.href}
+              class="border-border hover:border-primary text-fg inline-flex min-h-11 items-center gap-2 rounded-lg border px-4 font-medium transition-colors"
+            >
+              <Icon name={f.icon} class="size-5" aria-hidden="true" />
+              {f.label}
+            </a>
+          ))}
+        </div>
       </section>
 
       <section aria-labelledby="skills-heading">
@@ -70,7 +93,7 @@ const links = socials.filter((s) => s.label !== 'X');
             <li>
               <p class="font-semibold">{e.school}</p>
               <p class="text-fg-muted">
-                {e.degree}
+                {e.studyType}, {e.area}
                 {e.honors && `, ${e.honors}`}
               </p>
               <p class="text-fg-muted text-sm">

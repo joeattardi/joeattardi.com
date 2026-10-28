@@ -5,7 +5,8 @@
     "education": [
       {
         "school": "University of Massachusetts Lowell",
-        "degree": "B.S., Computer Science",
+        "studyType": "B.S.",
+        "area": "Computer Science",
         "start": "2000",
         "end": "2004",
         "honors": "summa cum laude"
