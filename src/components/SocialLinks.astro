@@ -1,10 +1,20 @@
 ---
 import { Icon } from 'astro-icon/components';
 import { socials } from '../data/site';
+
+interface Props {
+  /** Append a link to the blog's RSS feed */
+  feed?: boolean;
+}
+
+const { feed = false } = Astro.props;
+const links = feed
+  ? [...socials, { label: 'RSS feed', href: '/blog/rss.xml', icon: 'ph:rss' }]
+  : socials;
 ---
 
 <ul class="flex flex-wrap items-center gap-1">
-  {socials.map((s) => (
+  {links.map((s) => (
     <li>
       <a
         href={s.href}
