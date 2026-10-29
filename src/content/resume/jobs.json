@@ -1,0 +1,94 @@
+[
+  {
+    "id": "black-duck",
+    "order": 1,
+    "company": "Synopsys / Black Duck",
+    "location": "Burlington, MA",
+    "roles": [
+      {
+        "title": "Principal Software Engineer",
+        "start": "2024",
+        "end": "Present"
+      },
+      {
+        "title": "Senior Staff Software Engineer",
+        "start": "2021",
+        "end": "2024"
+      },
+      { "title": "Staff Software Engineer", "start": "2020", "end": "2021" }
+    ],
+    "highlights": [
+      "Partnered with product management and backend teams on customer-critical initiatives that helped retain several major enterprise clients.",
+      "Migrated legacy Backbone views to React components to modernize the Black Duck application, improving maintainability and performance across 80+ feature modules.",
+      "Built a mock API proxy allowing frontend engineers to develop independently of backend readiness, accelerating feature delivery and reducing integration overhead.",
+      "Created a Yeoman-based code generation tool that automated repetitive setup tasks, increasing development speed and consistency across the codebase.",
+      "Implemented an interactive heatmap visualization that automated a 20+ step manual workflow, reducing task time from minutes to seconds.",
+      "Led migration from Redux Saga to RTK Query, improving performance and user experience through efficient caching and simplified data fetching."
+    ]
+  },
+  {
+    "id": "salesforce",
+    "order": 2,
+    "company": "Salesforce",
+    "location": "Burlington, MA",
+    "roles": [
+      { "title": "Senior Software Engineer", "start": "2017", "end": "2020" }
+    ],
+    "highlights": [
+      "Built and maintained an Angular component library implementing the Salesforce Lightning Design System, enabling teams to deliver new features faster with a consistent Salesforce look and feel.",
+      "Trained and mentored developers from other teams ramping up with Angular, accelerating their onboarding and improving overall productivity.",
+      "Led the consolidation of multiple Git repositories into a single monorepo supporting 20+ engineers, streamlining collaboration and reducing maintenance complexity.",
+      "Engineered a smart build tool that reduced build and test time from over an hour to 15 minutes, significantly accelerating developer productivity.",
+      "Built code generation tools based on Angular Schematics to bootstrap new feature modules, saving developers time when creating new features and increasing productivity.",
+      "Spearheaded performance improvements to drag-and-drop functionality, reducing response time from several seconds to instantaneous and contributing to large-scale Commerce Cloud contract renewals."
+    ]
+  },
+  {
+    "id": "constant-contact",
+    "order": 3,
+    "company": "Constant Contact",
+    "location": "Waltham, MA",
+    "roles": [
+      {
+        "title": "Senior Software Engineer II",
+        "start": "2016",
+        "end": "2017"
+      },
+      { "title": "Senior Software Engineer", "start": "2015", "end": "2016" }
+    ],
+    "highlights": [
+      "Contributed to the development of the next-generation visual email editor, enabling marketers to build and customize email campaigns through an intuitive drag-and-drop interface.",
+      "Mentored a team of five junior engineers through design, development, and deployment of their first production feature, accelerating their growth and team productivity.",
+      "Built a custom dashboard consolidating pull request activity across 10+ GitHub repositories, giving the team real-time visibility into review progress and improving collaboration."
+    ]
+  },
+  {
+    "id": "ingenico",
+    "order": 4,
+    "company": "Ingenico Mobile Solutions",
+    "location": "Woburn, MA",
+    "roles": [
+      { "title": "Senior Software Engineer", "start": "2014", "end": "2015" }
+    ],
+    "highlights": [
+      "Led an effort for a visual redesign of the merchant facing portal.",
+      "Served as lead engineer of a small team of three junior engineers."
+    ]
+  },
+  {
+    "id": "dell",
+    "order": 5,
+    "company": "Dell",
+    "location": "Nashua, NH",
+    "roles": [
+      { "title": "Senior Software Engineer", "start": "2013", "end": "2014" },
+      { "title": "Software Engineer", "start": "2009", "end": "2013" }
+    ],
+    "highlights": [
+      "Headed an effort to add accessibility to the EqualLogic storage manager application.",
+      "Started a code quality initiative, implementing code reviews, continuous integration, and unit testing.",
+      "Implemented compression for the Java-based management application, saving valuable space in the firmware image.",
+      "Improved the EqualLogic performance monitor application, adding support for viewing multiple performance graphs simultaneously."
+    ]
+  }
+]

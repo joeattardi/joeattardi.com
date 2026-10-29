@@ -12,6 +12,7 @@ export const nav = [
   { label: 'Articles', href: '/articles' },
   { label: 'Blog', href: '/blog' },
   { label: 'Projects', href: '/projects' },
+  { label: 'Resume', href: '/resume' },
   { label: 'Contact', href: '/contact' },
 ];
 
